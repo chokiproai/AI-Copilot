@@ -1,5 +1,6 @@
-# AI Copilot (Bing AI)
-- [Triển khai trên Hugging Face](https://huggingface.co/login?next=%2Fspaces%2Fngoctuanai%2Fgpt4%3Fduplicate%3Dtrue)
+<h1 align="center">AI Copilot (Bing AI)</h1>
+
+## [Deploy on Hugging Face](https://huggingface.co/login?next=%2Fspaces%2Fngoctuanai%2Fgpt4%3Fduplicate%3Dtrue)
 
 ## Mục lục
 
