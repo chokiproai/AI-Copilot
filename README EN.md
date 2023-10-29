@@ -1,5 +1,6 @@
-# AI Copilot (Bing AI)
-- [Deploy on Hugging Face](https://huggingface.co/login?next=%2Fspaces%2Fngoctuanai%2Fgpt4%3Fduplicate%3Dtrue)
+<h1 align="center">AI Copilot (Bing AI)</h1>
+
+## [Deploy on Hugging Face](https://huggingface.co/login?next=%2Fspaces%2Fngoctuanai%2Fgpt4%3Fduplicate%3Dtrue)
 
 ## Introduction
 - ⭐ Based on Microsoft New Bing, the Microsoft New Bing website is custom-built with Vue3 and Go. It provides a consistent user interface experience, supports ChatGPT prompts, and is essentially compatible with all the features of Microsoft Bing AI. You can chat without needing to log in.
