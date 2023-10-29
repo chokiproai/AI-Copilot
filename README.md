@@ -9,7 +9,7 @@
 - [Tất cả](https://github.com/chokiproai/Bing-AI#tất-cả)
 
 ## Giới Thiệu
-- Dựa trên Microsoft New Bing, trang web Microsoft New Bing được tùy chỉnh đơn giản với Vue3 và Go. Nó có trải nghiệm giao diện người dùng nhất quán, hỗ trợ các từ nhắc ChatGPT, có sẵn và về cơ bản tương thích với tất cả các chức năng của Microsoft Bing AI. có thể trò chuyện mà không cần đăng nhập.
+- ⭐ Dựa trên Microsoft New Bing, trang web Microsoft New Bing được tùy chỉnh đơn giản với Vue3 và Go. Nó có trải nghiệm giao diện người dùng nhất quán, hỗ trợ các từ nhắc ChatGPT, có sẵn và về cơ bản tương thích với tất cả các chức năng của Microsoft Bing AI. có thể trò chuyện mà không cần đăng nhập.
 
 - ⭐ Khi máy chủ trò chuyện chính thức Bing (tương đối nhanh và ổn định, được khuyến nghị), bạn có thể tham khảo các giải pháp sau
 
