@@ -1,4 +1,4 @@
-# Bing AI - V1.15.1
+# AI Copilot (Bing AI)
 - [Triển khai trên Hugging Face](https://huggingface.co/login?next=%2Fspaces%2Fngoctuanai%2Fgpt4%3Fduplicate%3Dtrue)
 
 ## Mục lục
