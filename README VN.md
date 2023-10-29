@@ -3,10 +3,10 @@
 
 ## Mục lục
 
-- [Giới Thiệu](https://github.com/chokiproai/Bing-AI#giới-thiệu)
-- [Link](https://github.com/chokiproai/Bing-AI#link)
-- [Video](https://github.com/chokiproai/Bing-AI#video)
-- [Tất cả](https://github.com/chokiproai/Bing-AI#tất-cả)
+- [Giới Thiệu](https://github.com/chokiproai/AI-Copilot/blob/master/README%20VN.md#giới-thiệu)
+- [Link](https://github.com/chokiproai/AI-Copilot/blob/master/README%20VN.md#link)
+- [Video](https://github.com/chokiproai/AI-Copilot/blob/master/README%20VN.md#video)
+- [Tất cả](https://github.com/chokiproai/AI-Copilot/blob/master/README%20VN.md#tất-cả)
 
 ## Giới Thiệu
 - ⭐ Dựa trên Microsoft New Bing, trang web Microsoft New Bing được tùy chỉnh đơn giản với Vue3 và Go. Nó có trải nghiệm giao diện người dùng nhất quán, hỗ trợ các từ nhắc ChatGPT, có sẵn và về cơ bản tương thích với tất cả các chức năng của Microsoft Bing AI. có thể trò chuyện mà không cần đăng nhập.
