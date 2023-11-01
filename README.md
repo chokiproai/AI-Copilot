@@ -36,6 +36,12 @@
 
 >⭐[Image Creator](https://onedrive.live.com/embed?resid=750758803F9E18F7%21170&authkey=!AA6KYWKRIIZ2_Ug)
 
+### Cách nhận BING_COOKIE
+
+> Định cấu hình BING_COOKIE có nghĩa là bạn chia sẻ tài khoản của mình với tất cả những người sử dụng dịch vụ này, chức năng vẽ không cần đăng nhập thì nên đặt biến này.Mở https://www.bing.com và đăng nhập, sau đó copy Cookie
+
+![BING_COOKIE](https://cdn-uploads.huggingface.co/production/uploads/65126d4afdba96cc3c3e7498/WMjxkZs20Y3UyC2RDyfT3.png)
+
 ## Tất cả
 
 - [x] Soạn
