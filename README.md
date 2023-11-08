@@ -1,11 +1,8 @@
 <h1 align="center">AI Copilot (Bing AI)</h1>
 
-<<<<<<< HEAD
 # Ngôn ngữ khác
 > English language: https://github.com/chokiproai/AI-Copilot-EN
 
-=======
->>>>>>> 420e872 (AI Copilot)
 ## [Deploy on Hugging Face](https://huggingface.co/login?next=%2Fspaces%2Fngoctuanai%2Fgpt4%3Fduplicate%3Dtrue)
 
 ## Giới Thiệu
