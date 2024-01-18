@@ -24,9 +24,9 @@
 
 ## Link 
 
->⭐ [Chat AI](https://ngoctuanai-gpt4.hf.space)
+>⭐ [Chat AI](https://ngoctuanai-copilot.hf.space)
 
->⭐ [Image Creator](https://ngoctuanai-gpt4.hf.space/create)
+>⭐ [Image Creator](https://ngoctuanai-copilot.hf.space/create)
 
 ## Video
 
