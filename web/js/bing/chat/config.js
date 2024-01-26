@@ -540,7 +540,7 @@ _w['_sydConvTranslation'] = {
   messageSharedContent: 'Nội dung được chia sẻ',
   messageReceivedAriaLabelPrefix: 'Đã nhận được tin nhắn',
   messageReportedOffensiveAndRemoved: 'Đã loại bỏ tin nhắn này vì nó đã được báo cáo đang chờ xem xét.',
-  metaInternalSearchQuery: 'Đang tìm kiếm: {0}',
+  metaInternalSearchQuery: 'Đang tìm kiếm: `{0}`',
   metaInternalLoaderMessage: 'Đang tạo câu trả lời cho bạn...',
   metaInternalImageLoaderMessage: 'Phân tích hình ảnh: Mờ định danh sẽ ẩn khuôn mặt của Copilot',
   metaInternalFileAnalyzeLoaderMessage: 'Đang phân tích tệp:“{0}”',
@@ -1086,6 +1086,6 @@ if (UserStoreGet('enterpriseEnable')) {
   _w['_sydConvConfig']['enableMessagePrivacy'] = true
   _w['_sydConvConfig']['PLoadIID'] = 'SERP.5833'
   _w['_sydConvTranslation']['warmWelcomeTitle'] = 'Bing Chat Enterprise'
-  _w['_sydConvTranslation']['welcomeSubtitleText'] = '由 AI 支持的适用于 Web 的 Copilot'
-  _w['_sydConvTranslation']['inputRaiLabel'] = '你的个人和公司数据在此聊天中受到保护'
+  _w['_sydConvTranslation']['welcomeSubtitleText'] = 'AI Web Copilot'
+  _w['_sydConvTranslation']['inputRaiLabel'] = 'Dữ liệu cá nhân và công ty của bạn được bảo vệ trong cuộc trò chuyện này'
 }

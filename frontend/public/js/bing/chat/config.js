@@ -77,12 +77,14 @@ _w['_sydConvConfig'] = {
   enableSpeechTTSLatencyLogging: true,
   enableSpeechIconDarkTheme: true,
   enableSpeechAriaLabel: true,
+  enableReadAloudMessage: true,
+  enableReadAloudOptions: true,
   enableNewTopicAutoExpand: true,
   enableThreadsAADMSASwitch: true,
   enableMaxTurnsPerConversation: true,
-// 设置已登录账号的聊天对话次数
+  // 设置已登录账号的聊天对话次数
   maxTurnsPerConversation: 30,
-// 设置未登录账号的聊天对话次数
+  // 设置未登录账号的聊天对话次数
   maxTurnsPerConversationMuidUser: 10,
   maxMessageLength: 4000,
   maxMessageLengthBalanced: 2000,
@@ -265,6 +267,7 @@ _w['_sydConvConfig'] = {
   freeSydneySydneyIconUrl: '/rp/ZIFQVh6WX4QKgPWuBMBKNrERh3A.png',
   freeSydneyDesignerIconUrl: '/rp/l8iFubC9EgDGvKo7xeNIvSQwikU.png',
   enableF3pNoSearchBgFix: true,
+  enableSunoMusicCreate: true,
   enableFaqBcc: true,
   enableFaqBce: true,
   faqBccBceUrl: '/new',
@@ -953,6 +956,7 @@ _w['_sydConvTranslation'] = {
   freeSydneyWelcomeTilesCompareDescription: '我正在考虑进行职业更改。你能帮我完成优缺点分析吗?',
   freeSydneyWelcomeTilesOrganizeTitle: '整理',
   freeSydneyWelcomeTilesOrganizeDescription: '创建一个表，帮助我计划接下来两周的就餐',
+  sunoPolicyText: '你的歌曲请求，包括其中的任何个人数据，将与 Suno 共享。使用流派和风格来描述你的请求，而不是使用特定艺术家姓名。每天最多可创建 5 首歌曲。',
   freeSydneyWelcomeTilesImageTitle: '选择以尝试',
   customGptWelcomeTilesQuestionDescription: 'What type of questions can I ask?',
   customGptWelcomeTilesListDescription: '告诉我 5 件关于你的事',

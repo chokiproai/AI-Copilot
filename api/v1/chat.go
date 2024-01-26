@@ -118,6 +118,8 @@ func ChatHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				w.Write([]byte("data: "))
 				w.Write(resData)
+				w.Write([]byte("\n\n"))
+				flusher.Flush()
 				break
 			}
 			resData, err := json.Marshal(resp)
@@ -133,13 +135,15 @@ func ChatHandler(w http.ResponseWriter, r *http.Request) {
 
 			if tmp == "User needs to solve CAPTCHA to continue." && common.BypassServer != "" {
 				go func(cookie string) {
-					t, _ := getCookie(cookie)
+					t, _ := getCookie(cookie, chat.GetChatHub().GetConversationId(), hex.NewUUID())
 					if t != "" {
 						globalChat.SetCookies(t)
 					}
 				}(globalChat.GetCookies())
 			}
 		}
+		w.Write([]byte("data: [DONE]\n"))
+		flusher.Flush()
 	} else {
 		text, err := chat.Chat(prompt, msg)
 		if err != nil {
@@ -168,7 +172,7 @@ func ChatHandler(w http.ResponseWriter, r *http.Request) {
 
 		if text == "User needs to solve CAPTCHA to continue." && common.BypassServer != "" {
 			go func(cookie string) {
-				t, _ := getCookie(cookie)
+				t, _ := getCookie(cookie, chat.GetChatHub().GetConversationId(), hex.NewUUID())
 				if t != "" {
 					globalChat.SetCookies(t)
 				}
