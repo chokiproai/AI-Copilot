@@ -265,6 +265,7 @@ _w['_sydConvConfig'] = {
   freeSydneySydneyIconUrl: '/rp/ZIFQVh6WX4QKgPWuBMBKNrERh3A.png',
   freeSydneyDesignerIconUrl: '/rp/l8iFubC9EgDGvKo7xeNIvSQwikU.png',
   enableF3pNoSearchBgFix: true,
+  enableSunoMusicCreate: true,
   enableFaqBcc: true,
   enableFaqBce: true,
   faqBccBceUrl: '/new',
@@ -953,6 +954,7 @@ _w['_sydConvTranslation'] = {
   freeSydneyWelcomeTilesCompareDescription: 'Tôi đang cân nhắc thay đổi nghề nghiệp. Bạn có thể giúp tôi phân tích ưu nhược điểm không?',
   freeSydneyWelcomeTilesOrganizeTitle: 'Tổ chức',
   freeSydneyWelcomeTilesOrganizeDescription: 'Tạo một bảng để giúp tôi lên kế hoạch ăn uống trong hai tuần tới',
+  sunoPolicyText: 'Yêu cầu bài hát của bạn, bao gồm mọi dữ liệu cá nhân có trong đó, sẽ được chia sẻ với Suno. Sử dụng thể loại và phong cách để mô tả yêu cầu của bạn thay vì tên nghệ sĩ cụ thể. Bạn có thể tạo tối đa 5 bài hát mỗi ngày.',
   freeSydneyWelcomeTilesImageTitle: 'Chọn để thử',
   customGptWelcomeTilesQuestionDescription: 'Tôi có thể hỏi những câu hỏi gì?',
   customGptWelcomeTilesListDescription: 'Kể cho tôi 5 điều về bạn',
@@ -1086,6 +1088,6 @@ if (UserStoreGet('enterpriseEnable')) {
   _w['_sydConvConfig']['enableMessagePrivacy'] = true
   _w['_sydConvConfig']['PLoadIID'] = 'SERP.5833'
   _w['_sydConvTranslation']['warmWelcomeTitle'] = 'Bing Chat Enterprise'
-  _w['_sydConvTranslation']['welcomeSubtitleText'] = 'AI Web Copilot'
-  _w['_sydConvTranslation']['inputRaiLabel'] = 'Dữ liệu cá nhân và công ty của bạn được bảo vệ trong cuộc trò chuyện này'
+  _w['_sydConvTranslation']['welcomeSubtitleText'] = '由 AI 支持的适用于 Web 的 Copilot'
+  _w['_sydConvTranslation']['inputRaiLabel'] = '你的个人和公司数据在此聊天中受到保护'
 }
