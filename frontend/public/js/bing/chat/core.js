@@ -19,4 +19,7 @@ _w.rms.js(
   { 'A:rms:answers:Web:SydneyWelcomeScreenBase':'/rp/KgDPK_mKWjMgWe6o0SKA9dfE00Y.br.js' },
   { 'A:rms:answers:Web:SydneyWelcomeScreen':'/rp/sNzL8vfHHNmyqYOSQey9fNYd3kI.br.js' },
   { 'A:rms:answers:Web:SydneyFullScreenConv': '/rp/woTEvR_zADcXDZ_3430ZOYBRkus.br.js' },
+  {
+    'A:rms:answers:Web:SydneyStyleOverride': '\/rp\/SUJtUXs3vag7YTcYsiY572XvxRU.br.js'
+  },
   );

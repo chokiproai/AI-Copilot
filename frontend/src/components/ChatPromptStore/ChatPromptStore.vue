@@ -18,7 +18,7 @@ const isExporting = ref(false);
 const showAddPromptPop = () => {
   optPromptConfig.value.isShow = true;
   optPromptConfig.value.type = 'add';
-  optPromptConfig.value.title = '添加提示词';
+  optPromptConfig.value.title = 'Thêm từ gợi ý';
   optPromptConfig.value.newPrompt = {
     act: '',
     prompt: '',
@@ -28,26 +28,26 @@ const showAddPromptPop = () => {
 const savePrompt = () => {
   const { type, tmpPrompt, newPrompt } = optPromptConfig.value;
   if (!newPrompt.act) {
-    return messgae.error('提示词标题不能为空');
+    return messgae.error('Tiêu đề từ gợi ý không được để trống');
   }
   if (!newPrompt.prompt) {
-    return messgae.error('提示词描述不能为空');
+    return messgae.error('Mô tả từ gợi ý không được để trống');
   }
   if (type === 'add') {
     promptList.value = [newPrompt, ...promptList.value];
-    messgae.success('添加提示词成功');
+    messgae.success('Đã thêm từ gợi ý thành công');
   } else if (type === 'edit') {
     if (newPrompt.act === tmpPrompt?.act && newPrompt.prompt === tmpPrompt?.prompt) {
-      messgae.warning('提示词未变更');
+      messgae.warning('Từ gợi ý không thay đổi');
       optPromptConfig.value.isShow = false;
       return;
     }
     const rawIndex = promptList.value.findIndex((x) => x.act === tmpPrompt?.act && x.prompt === tmpPrompt?.prompt);
     if (rawIndex > -1) {
       promptList.value[rawIndex] = newPrompt;
-      messgae.success('编辑提示词成功');
+      messgae.success('Đã chỉnh sửa từ gợi ý thành công');
     } else {
-      messgae.error('编辑提示词出错');
+      messgae.error('Chỉnh sửa từ gợi ý bị lỗi');
     }
   }
   optPromptConfig.value.isShow = false;
@@ -72,20 +72,20 @@ const importPrompt = async (options: { file: UploadFileInfo; fileList: Array<Upl
     const promptData = JSON.parse(fileText);
     const result = promptStore.addPrompt(promptData);
     if (result.result) {
-      messgae.info(`上传文件含 ${promptData.length} 条数据`);
-      messgae.success(`成功导入 ${result.data?.successCount} 条有效数据`);
+      messgae.info(`Tệp tải lên chứa ${promptData.length} dữ liệu`);
+      messgae.success(`Đã nhập thành công ${result.data?.successCount} dữ liệu hợp lệ`);
     } else {
-      messgae.error(result.msg || '提示词格式有误');
+      messgae.error(result.msg || 'Định dạng từ gợi ý có lỗi');
     }
     isImporting.value = false;
   } else {
-    messgae.error('上传文件有误');
+    messgae.error('Tệp tải lên có lỗi');
   }
 };
 
 const exportPrompt = () => {
   if (promptList.value.length === 0) {
-    return messgae.error('暂无可导出的提示词数据');
+    return messgae.error('Không có dữ liệu từ gợi ý để xuất');
   }
   isExporting.value = true;
   const jsonDataStr = JSON.stringify(promptList.value);
@@ -96,18 +96,18 @@ const exportPrompt = () => {
   link.download = 'BingAIPrompts.json';
   link.click();
   URL.revokeObjectURL(url);
-  messgae.success('导出提示词库成功');
+  messgae.success('Đã xuất kho từ gợi ý thành công');
   isExporting.value = false;
 };
 
 const clearPrompt = () => {
   promptList.value = [];
-  messgae.success('清空提示词库成功');
+  messgae.success('Đã xóa sạch kho từ gợi ý');
 };
 
 const downloadPrompt = async (config: IPromptDownloadConfig) => {
   if (!config.url) {
-    return messgae.error('请先输入下载链接');
+    return messgae.error('Vui lòng nhập liên kết tải xuống trước');
   }
   config.isDownloading = true;
   let jsonData: Array<IPrompt>;
