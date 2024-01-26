@@ -2,7 +2,7 @@ name: Build AI Copilot
 on:
   push:
     tags:
-      - v*
+      - 'V1.19.0v1'
 
 jobs:
   build:
