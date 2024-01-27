@@ -77,6 +77,8 @@ _w['_sydConvConfig'] = {
   enableSpeechTTSLatencyLogging: true,
   enableSpeechIconDarkTheme: true,
   enableSpeechAriaLabel: true,
+  enableReadAloudMessage: true,
+  enableReadAloudOptions: true,
   enableNewTopicAutoExpand: true,
   enableThreadsAADMSASwitch: true,
   enableMaxTurnsPerConversation: true,
