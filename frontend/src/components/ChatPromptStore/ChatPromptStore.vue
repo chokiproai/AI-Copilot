@@ -128,32 +128,32 @@ const downloadPrompt = async (config: IPromptDownloadConfig) => {
       });
     jsonData.shift();
   } else {
-    config.isDownloading = false;
-    return messgae.error('暂不支持下载此后缀的提示词');
+  config.isDownloading = false;
+  return messgae.error('Tạm thời không hỗ trợ tải xuống từ gợi ý với phần mở rộng này');
   }
   config.isDownloading = false;
   const result = promptStore.addPrompt(jsonData);
   if (result.result) {
-    messgae.info(`下载文件含 ${jsonData.length} 条数据`);
-    messgae.success(`成功导入 ${result.data?.successCount} 条有效数据`);
+    messgae.info(`Tệp tải xuống chứa ${jsonData.length} dữ liệu`);
+    messgae.success(`Đã nhập thành công ${result.data?.successCount} dữ liệu hợp lệ`);
   } else {
-    messgae.error(result.msg || '提示词格式有误');
+    messgae.error(result.msg || 'Định dạng từ gợi ý có lỗi');
   }
-};
-</script>
+  };
+  </script>
 
 <template>
-  <NModal class="w-11/12 xl:w-[900px]" v-model:show="isShowPromptSotre" preset="card" title="提示词库">
+  <NModal class="w-11/12 xl:w-[900px]" v-model:show="isShowPromptSotre" preset="card" title="Kho từ gợi ý">
     <div class="flex justify-start flex-wrap gap-2 px-5 pb-2">
-      <NInput class="basis-full xl:basis-0 xl:min-w-[300px]" placeholder="搜索提示词" v-model:value="keyword" :clearable="true"></NInput>
-      <NButton secondary type="info" @click="isShowDownloadPop = true">下载</NButton>
-      <NButton secondary type="info" @click="showAddPromptPop">添加</NButton>
+      <NInput class="basis-full xl:basis-0 xl:min-w-[300px]" placeholder="Tìm kiếm từ gợi ý" v-model:value="keyword" :clearable="true"></NInput>
+      <NButton secondary type="info" @click="isShowDownloadPop = true">Tải xuống</NButton>
+      <NButton secondary type="info" @click="showAddPromptPop">Thêm</NButton>
       <NUpload class="w-[56px] xl:w-auto" accept=".json" :default-upload="false" :show-file-list="false" @change="importPrompt">
-        <NButton secondary type="success" :loading="isImporting">导入</NButton>
+        <NButton secondary type="success" :loading="isImporting">Nhập</NButton>
       </NUpload>
-      <!-- <NButton secondary type="success">导入</NButton> -->
-      <NButton secondary type="success" @click="exportPrompt" :loading="isExporting">导出</NButton>
-      <NButton secondary type="error" @click="clearPrompt">清空</NButton>
+      <!-- <NButton secondary type="success">Nhập</NButton> -->
+      <NButton secondary type="success" @click="exportPrompt" :loading="isExporting">Xuất</NButton>
+      <NButton secondary type="error" @click="clearPrompt">Xóa sạch</NButton>
     </div>
     <VirtualList
       v-if="searchPromptList.length > 0"
@@ -163,32 +163,32 @@ const downloadPrompt = async (config: IPromptDownloadConfig) => {
       :data-component="ChatPromptItem"
       :keeps="10"
     />
-    <NEmpty v-else class="h-[40vh] xl:h-[60vh] flex justify-center items-center" description="暂无数据">
+    <NEmpty v-else class="h-[40vh] xl:h-[60vh] flex justify-center items-center" description="Không có dữ liệu">
       <template #extra>
-        <NButton secondary type="info" @click="isShowDownloadPop = true">下载提示词</NButton>
+        <NButton secondary type="info" @click="isShowDownloadPop = true">Tải xuống từ gợi ý</NButton>
       </template>
     </NEmpty>
   </NModal>
   <NModal class="w-11/12 xl:w-[600px]" v-model:show="optPromptConfig.isShow" preset="card" :title="optPromptConfig.title">
     <NSpace vertical>
-      标题
-      <NInput placeholder="请输入标题" v-model:value="optPromptConfig.newPrompt.act"></NInput>
-      描述
-      <NInput placeholder="请输入描述" type="textarea" v-model:value="optPromptConfig.newPrompt.prompt"></NInput>
-      <NButton block secondary type="info" @click="savePrompt">保存</NButton>
+      Tiêu đề
+      <NInput placeholder="Nhập tiêu đề" v-model:value="optPromptConfig.newPrompt.act"></NInput>
+      Mô tả
+      <NInput placeholder="Nhập mô tả" type="textarea" v-model:value="optPromptConfig.newPrompt.prompt"></NInput>
+      <NButton block secondary type="info" @click="savePrompt">Lưu</NButton>
     </NSpace>
   </NModal>
-  <NModal class="w-11/12 xl:w-[600px]" v-model:show="isShowDownloadPop" preset="card" title="下载提示词">
+  <NModal class="w-11/12 xl:w-[600px]" v-model:show="isShowDownloadPop" preset="card" title="Tải xuống từ gợi ý">
     <NList class="overflow-y-auto rounded-lg" hoverable clickable>
       <NListItem v-for="(config, index) in promptDownloadConfig" :key="index">
         <a v-if="config.type === 1" class="no-underline text-blue-500" :href="config.url" target="_blank" rel="noopener noreferrer">{{ config.name }}</a>
-        <NInput v-else-if="config.type === 2" placeholder="请输入下载链接，支持 json 及 csv " v-model:value="config.url"></NInput>
+        <NInput v-else-if="config.type === 2" placeholder="Nhập liên kết tải xuống, hỗ trợ json và csv " v-model:value="config.url"></NInput>
         <template #suffix>
           <div class="flex justify-center gap-5">
             <a class="no-underline" v-if="config.type === 1" :href="config.refer" target="_blank" rel="noopener noreferrer">
-              <NButton secondary>来源</NButton>
+              <NButton secondary>Nguồn</NButton>
             </a>
-            <NButton secondary type="info" @click="downloadPrompt(config)" :loading="config.isDownloading">下载</NButton>
+            <NButton secondary type="info" @click="downloadPrompt(config)" :loading="config.isDownloading">Tải xuống</NButton>
           </div>
         </template>
       </NListItem>
