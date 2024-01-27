@@ -41,7 +41,6 @@ jobs:
         run: |
           GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -tags netgo -trimpath -o go-proxy-bingai main.go && tar -zcvf go-proxy-bingai-linux-amd64.tar.gz go-proxy-bingai
           GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -tags netgo -trimpath -o go-proxy-bingai main.go && tar -zcvf go-proxy-bingai-linux-arm64.tar.gz go-proxy-bingai
-          GOOS=linux GOARCH=arm GOARM=7 go build -ldflags="-s -w" -tags netgo -trimpath -o go-proxy-bingai main.go && tar -zcvf go-proxy-bingai-linux-armv7.tar.gz go-proxy-bingai
 
       - name: Create Release and Upload Release Asset
         uses: softprops/action-gh-release@v1
@@ -49,7 +48,6 @@ jobs:
           files: |
             go-proxy-bingai-linux-amd64.tar.gz
             go-proxy-bingai-linux-arm64.tar.gz
-            go-proxy-bingai-linux-armv7.tar.gz
 
       - uses: actions/upload-artifact@v3
         with:
