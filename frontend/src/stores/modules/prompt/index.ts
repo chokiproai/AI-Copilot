@@ -26,7 +26,7 @@ export const usePromptStore = defineStore(
       {
         type: 1,
         name: 'ChatGPT chatgpt-Prompt-vn',
-        url: './data/prompts/chatgpt-Prompt-vn.json',
+        url: './data/prompts/prompts-Vi.json',
         refer: 'https://github.com/chokiproai/prompt/blob/main/vi.json',
       },
       {
