@@ -1,7 +1,8 @@
 <h1 align="center">AI Copilot (Bing AI)</h1>
 
 # Ngôn ngữ khác
-> Tác giả: [Harry-zklcdc/go-proxy-bingai](https://github.com/Harry-zklcdc/go-proxy-bingai)
+> Tác giả gốc: [Harry-zklcdc/go-proxy-bingai](https://github.com/Harry-zklcdc/go-proxy-bingai)
+
 > English language: https://github.com/chokiproai/AI-Copilot-EN
 
 ## 🤗 Hugging Face
