@@ -3,7 +3,7 @@
 # Ngôn ngữ khác
 > Tác giả gốc: [Harry-zklcdc/go-proxy-bingai](https://github.com/Harry-zklcdc/go-proxy-bingai)
 
-> English language: https://github.com/chokiproai/AI-Copilot-EN
+> English language: [AI-Copilot-EN](https://github.com/chokiproai/AI-Copilot-EN)
 
 ## 🤗 Hugging Face
 > ## [![Deploy on Hugging Face](https://huggingface.co/datasets/huggingface/badges/raw/main/deploy-on-spaces-md.svg)](https://huggingface.co/login?next=%2Fspaces%2Fngoctuanai%2Fgpt4%3Fduplicate%3Dtrue)
@@ -37,13 +37,11 @@
 
 >⭐[Image Creator](https://onedrive.live.com/embed?resid=750758803F9E18F7%21170&authkey=!AA6KYWKRIIZ2_Ug)
 
-### Cách nhận BING_COOKIE
+### Cách nhận BING_COOKIE (Nếu  muốn dùng cho Image Creator)
 
 > Định cấu hình BING_COOKIE có nghĩa là bạn chia sẻ tài khoản của mình với tất cả những người sử dụng dịch vụ này, chức năng vẽ không cần đăng nhập thì nên đặt biến này.Mở https://www.bing.com và đăng nhập, sau đó copy Cookie
 
-![BING_COOKIE](https://cdn-uploads.huggingface.co/production/uploads/65126d4afdba96cc3c3e7498/WMjxkZs20Y3UyC2RDyfT3.png)
-
-#### Hoặc sử dụng: https://ngoctuanai-getbingcookies.hf.space
+![BING_COOKIE](https://github-production-user-asset-6210df.s3.amazonaws.com/128912789/301841623-ae5265a6-9e7c-4475-86ce-3e1faaa70f1c.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240202T122303Z&X-Amz-Expires=300&X-Amz-Signature=3233573f779313e1e01eb31dce38f0a300c25a09433379cce4ad701c2f667de4&X-Amz-SignedHeaders=host&actor_id=128912789&key_id=0&repo_id=711082295)
 
 ## Tất cả
 
