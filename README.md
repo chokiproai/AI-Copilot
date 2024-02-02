@@ -13,7 +13,7 @@
 
 - ⭐ Khi máy chủ trò chuyện chính thức Bing (tương đối nhanh và ổn định, được khuyến nghị), bạn có thể tham khảo các giải pháp sau
 
-- ⭐ Máy chủ trò chuyện (mặc định là "Máy chủ xịn"). Số lượng yêu cầu được giới hạn ở 100.000 mỗi ngày. Nó có thể được chuyển đổi trong Cài đặt => Lựa chọn dịch vụ ở góc trên bên phải.
+- ⭐ Máy chủ trò chuyện (mặc định là "Trang web của bạn"). Số lượng yêu cầu được giới hạn ở 100.000 mỗi ngày. Nó có thể được chuyển đổi trong Cài đặt => Lựa chọn dịch vụ ở góc trên bên phải.
 
 - ⭐ Có sẵn (máy chủ triển khai được kết nối trực tiếp với www.bing.com mà không cần chuyển hướng CN và có thể định cấu hình kết nối)
 
@@ -37,9 +37,9 @@
 
 >⭐[Image Creator](https://onedrive.live.com/embed?resid=750758803F9E18F7%21170&authkey=!AA6KYWKRIIZ2_Ug)
 
-### Cách nhận BING_COOKIE (Nếu  muốn dùng cho Image Creator)
+### Cách nhận BING_COOKIE (Nếu muốn dùng cho Image Creator)
 
-> Định cấu hình BING_COOKIE có nghĩa là bạn chia sẻ tài khoản của mình với tất cả những người sử dụng dịch vụ này, chức năng vẽ không cần đăng nhập thì nên đặt biến này.Mở https://www.bing.com và đăng nhập, sau đó copy Cookie
+> Định cấu hình BING_COOKIE có nghĩa là bạn chia sẻ tài khoản của mình với tất cả những người sử dụng dịch vụ này, chức năng vẽ không cần đăng nhập thì nên đặt biến này. Mở https://www.bing.com và đăng nhập, sau đó Copy Cookie
 
 ![BING_COOKIE](https://github-production-user-asset-6210df.s3.amazonaws.com/128912789/301841623-ae5265a6-9e7c-4475-86ce-3e1faaa70f1c.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240202T122303Z&X-Amz-Expires=300&X-Amz-Signature=3233573f779313e1e01eb31dce38f0a300c25a09433379cce4ad701c2f667de4&X-Amz-SignedHeaders=host&actor_id=128912789&key_id=0&repo_id=711082295)
 
