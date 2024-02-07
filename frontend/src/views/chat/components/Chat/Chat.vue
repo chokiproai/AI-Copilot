@@ -43,14 +43,19 @@ const isShowHistory = computed(() => {
   return (CIB.vm.isMobile && CIB.vm.sidePanel.isVisibleMobile) || (!CIB.vm.isMobile && CIB.vm.sidePanel.isVisibleDesktop);
 });
 
-const { themeMode, gpt4tEnable, sydneyEnable, sydneyPrompt, enterpriseEnable } = storeToRefs(userStore);
+const { themeMode, uiVersion, gpt4tEnable, sydneyEnable, sydneyPrompt, enterpriseEnable } = storeToRefs(userStore);
 
 onMounted(async () => {
   await initChat();
   hackDevMode();
   // CIB.vm.isMobile = isMobile();
   // show conversion
-  SydneyFullScreenConv.initWithWaitlistUpdate({ cookLoc: {} }, 10);
+  await SydneyFullScreenConv.initWithWaitlistUpdate({ cookLoc: {} }, 10);
+  if (uiVersion.value === 'v3') {
+    await sj_evt.bind('chs_init', () => {
+      ChatHomeScreen.init('/turing/api/suggestions/v2/zeroinputstarter');
+    }, true);
+  }
   initSysConfig();
 
   isShowLoading.value = false;
@@ -195,7 +200,7 @@ const hackSydney = () => {
 			"515oscfing2s0",
 			"524vidansgs0",
     ]
-    CIB.config.sydney.request.optionsSets.push("rai278", "enflst", "enpcktrk",  "rcaldictans", "rcaltimeans", "nojbfedge")
+  CIB.config.sydney.request.optionsSets.push("rai278", "nojbfedge")
   CIB.config.features.enableUpdateConversationMessages = true
   CIB.registerContext([{
     "author": "user",

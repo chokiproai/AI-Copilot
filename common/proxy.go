@@ -64,8 +64,8 @@ var (
 	}
 	USER_TOKEN_COOKIE_NAME          = "_U"
 	USER_KievRPSSecAuth_COOKIE_NAME = "KievRPSSecAuth"
-	USER_RwBf_COOKIE_NAME           = "_RwBf"
 	User_MUID_COOKIE_NAME           = "MUID"
+	USER_RwBf_COOKIE_NAME           = "_RwBf"
 	RAND_COOKIE_INDEX_NAME          = "BingAI_Rand_CK"
 	RAND_IP_COOKIE_NAME             = "BingAI_Rand_IP"
 	PROXY_WEB_PREFIX_PATH           = "/web/"
@@ -207,12 +207,15 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 		}
 
 		// 修改响应 cookie 域
-		// resCookies := res.Header.Values("Set-Cookie")
-		// if len(resCookies) > 0 {
-		// 	for i, v := range resCookies {
-		// 		resCookies[i] = strings.ReplaceAll(strings.ReplaceAll(v, ".bing.com", originalHost), "bing.com", originalHost)
-		// 	}
-		// }
+		resCookies := res.Header.Values("Set-Cookie")
+		if len(resCookies) > 0 {
+			res.Header.Del("Set-Cookie")
+			for _, v := range resCookies {
+				if v != "" {
+					res.Header.Add("Set-Cookie", strings.Split(v, "; ")[0]+"; Path=/")
+				}
+			}
+		}
 
 		// 设置服务器 cookie 对应索引
 		if resCKRandIndex != "" {

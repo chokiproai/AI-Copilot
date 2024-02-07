@@ -5,6 +5,9 @@ declare const sj_evt: {
 declare const SydneyFullScreenConv: {
   initWithWaitlistUpdate: (n: object, t: number) => void;
 };
+declare const ChatHomeScreen: {
+  init: (n: string) => void;
+};
 
 /**
  * 更有创造力 | 更平衡 | 更精确
@@ -185,6 +188,13 @@ declare const CIB: {
        * PC 是否显示  get shouldShowPanel
        */
       isVisibleDesktop: boolean;
+            /**
+       * 面板类型
+       */
+            panels: {
+              type: string;
+              label: string;
+            }[];
       /**
        * 选择的面板 threads / plugins
        */
