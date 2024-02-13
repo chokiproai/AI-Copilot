@@ -47,6 +47,7 @@ const gpt4tSetting = ref(true);
 const sydneySetting = ref(false);
 const sydneyPromptSetting = ref('');
 const passServerSetting = ref('');
+const author = ref('');
 
 const GetLastVersion = async () => {
   const res = await fetch('https://api.github.com/repos/chokiproai/AI-Copilot/releases/latest');
@@ -193,6 +194,7 @@ const handleSelect = (key: string) => {
         for (let i = 0; i < _G.SP.length; i++) {
           tmpA.push(S[_G.SP[i]]);
         }
+        author.value = base58Decode(tmpA.join(''));
         isShowSetAboutModal.value = true;
         GetLastVersion();
       }
@@ -448,7 +450,7 @@ const autoPassCFChallenge = async () => {
         <NButton text tag="a" href="https://github.com/adams549659584/go-proxy-bingai" target="_blank" type="success">adams549659584/go-proxy-bingai</NButton>
       </NFormItem>
       <NFormItem path="token" label="Mã Nguồn Gốc">
-        <NButton text tag="a" href="https://github.com/Harry-zklcdc/go-proxy-bingai" target="_blank" type="success">Harry-zklcdc/go-proxy-bingai</NButton>
+        <NButton text tag="a" :href="'https://github.com/'+author" target="_blank" type="success">{{ author }}</NButton>
       </NFormItem>
   </NForm>
       <template #action>
