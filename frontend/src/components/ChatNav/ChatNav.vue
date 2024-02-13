@@ -188,6 +188,12 @@ const handleSelect = (key: string) => {
       break;
     case navType.about:
       {
+                const S = base58Decode(_G.S);
+        let tmpA = [];
+        for (let i = 0; i < _G.SP.length; i++) {
+          tmpA.push(S[_G.SP[i]]);
+        }
+        author.value = base58Decode(tmpA.join(''));
         isShowSetAboutModal.value = true;
         GetLastVersion();
       }
@@ -249,25 +255,27 @@ const saveAdvancedSetting = () => {
   const sidepanel = serpEle?.shadowRoot?.querySelector('cib-conversation')?.querySelector('cib-side-panel')?.shadowRoot?.querySelector('.main')
   const threadsHeader = sidepanel?.querySelector('.threads-header') as HTMLElement;
   const threadsContainer = sidepanel?.querySelector('.threads-container') as HTMLElement;
-  if (history.value && userStore.getUserToken() && !enterpriseEnable.value) {
-    if (tmpuiVersion === 'v2') {
-      threadsHeader.style.display = 'flex'
-      threadsContainer.style.display = 'block'
+  if (!isMobile()) {
+    if (history.value && userStore.getUserToken() && !enterpriseEnable.value) {
+      if (tmpuiVersion === 'v2') {
+        threadsHeader.style.display = 'flex'
+        threadsContainer.style.display = 'block'
+      } else {
+        CIB.vm.sidePanel.panels = [
+          { type: 'threads', label: 'Hoạt động gần đây' },
+          { type: 'plugins', label: 'Plugin' }
+        ]
+      }
     } else {
-      CIB.vm.sidePanel.panels = [
-        { type: 'threads', label: '最近的活动' },
-        { type: 'plugins', label: '插件' }
-      ]
-    }
-  } else {
-       if (tmpuiVersion === 'v2') {
-      threadsHeader.style.display = 'none'
-      threadsContainer.style.display = 'none'
-    } else {
-      CIB.vm.sidePanel.panels = [
-        { type: 'plugins', label: '插件' }
-      ]
-      CIB.vm.sidePanel.selectedPanel = 'plugins'
+      if (tmpuiVersion === 'v2') {
+        threadsHeader.style.display = 'none'
+        threadsContainer.style.display = 'none'
+      } else {
+        CIB.vm.sidePanel.panels = [
+          { type: 'plugins', label: 'Plugins' }
+        ]
+        CIB.vm.sidePanel.selectedPanel = 'plugins'
+      }
     }
   }
 
@@ -376,7 +384,7 @@ const autoPassCFChallenge = async () => {
     style="margin-top: 16px;">
     <NGrid x-gap="0" :cols="2">
       <NGridItem>
-        <NFormItem path="history" label="Lịch sử ghi lại">
+        <NFormItem path="history" label="Lịch sử">
           <NSwitch v-model:value="history" />
         </NFormItem>
       </NGridItem>
@@ -396,9 +404,6 @@ const autoPassCFChallenge = async () => {
         </NFormItem>
       </NGridItem>
   </NGrid>
-    <NFormItem path="sydneyPrompt" label="Máy chủ xác thực người-máy">
-      <NInput size="large" v-model:value="passServerSetting" type="text" placeholder="Máy chủ xác thực người-máy" />
-    </NFormItem>
     <NFormItem path="sydneyPrompt" label="Từ gợi ý">
       <NInput size="large" v-model:value="sydneyPromptSetting" type="text" placeholder="Từ gợi ý chế độ Jailbreak" />
     </NFormItem>
@@ -447,9 +452,9 @@ const autoPassCFChallenge = async () => {
         <NButton text tag="a" href="https://github.com/Harry-zklcdc/go-proxy-bingai" target="_blank" type="success">Harry-zklcdc/go-proxy-bingai</NButton>
       </NFormItem>
   </NForm>
-<template #action>
-  <NButton ghost size="large" @click="isShowSetAboutModal = false" type="info">Đồng ý</NButton>
-  </template>
-  </NModal>
+      <template #action>
+        <NButton ghost size="large" @click="isShowSetAboutModal = false" type="info">Đồng ý</NButton>
+      </template>
+    </NModal>
   <CreateImage v-model:show="isShowCreateImageModal" />
   </NConfigProvider></template>

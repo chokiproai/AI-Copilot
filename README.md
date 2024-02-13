@@ -5,8 +5,8 @@
 
 > English language: [AI-Copilot-EN](https://github.com/chokiproai/AI-Copilot-EN)
 
-## 🤗 Hugging Face
-> ## [![Deploy on Hugging Face](https://huggingface.co/datasets/huggingface/badges/raw/main/deploy-on-spaces-md.svg)](https://huggingface.co/login?next=%2Fspaces%2Fngoctuanai%2Fcopilot%3Fduplicate%3Dtrue)
+## 📦 CodeSandBox
+> ## [![Deploy on CodeSandBox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/devbox/github/chokiproai/AI-Copilot/tree/master?import=true)
 
 ## Giới Thiệu
 - ⭐ Dựa trên Microsoft New Bing, trang web Microsoft New Bing được tùy chỉnh đơn giản với Vue3 và Go. Nó có trải nghiệm giao diện người dùng nhất quán, hỗ trợ các từ nhắc ChatGPT, có sẵn và về cơ bản tương thích với tất cả các chức năng của Microsoft Bing AI. có thể trò chuyện mà không cần đăng nhập.

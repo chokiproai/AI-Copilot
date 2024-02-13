@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
-import { NEmpty, NButton, useMessage, NResult, NInput } from 'naive-ui';
+import { NEmpty, NButton, useDialog, useMessage, NResult, NInput } from 'naive-ui';
 import conversationCssText from '@/assets/css/conversation.css?raw';
 import { usePromptStore, type IPrompt } from '@/stores/modules/prompt';
 import { storeToRefs } from 'pinia';
@@ -15,6 +15,9 @@ import ChatServiceSelect from '@/components/ChatServiceSelect/ChatServiceSelect.
 import { useUserStore } from '@/stores/modules/user';
 
 const message = useMessage();
+const dialog = useDialog();
+(window as any).$dialog = dialog;
+
 const isShowLoading = ref(true);
 
 const promptStore = usePromptStore();
@@ -51,6 +54,10 @@ onMounted(async () => {
   // CIB.vm.isMobile = isMobile();
   // show conversion
   await SydneyFullScreenConv.initWithWaitlistUpdate({ cookLoc: {} }, 10);
+    if (isMobile()) {
+    const serpEle = document.querySelector('cib-serp');
+    serpEle?.setAttribute('mobile', '');
+  }
   if (uiVersion.value === 'v3') {
     await sj_evt.bind('chs_init', () => {
       ChatHomeScreen.init('/turing/api/suggestions/v2/zeroinputstarter');
@@ -77,6 +84,10 @@ onMounted(async () => {
     }
   }
 });
+
+const sleep = async (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const hackDevMode = () => {
   if (import.meta.env.DEV) {
@@ -114,6 +125,18 @@ const initSysConfig = async () => {
         await afterAuth(res.data);
       }
       break;
+          case ApiResultCode.UnLegal:
+      {
+        _G.SB = true
+        dialog.warning({
+          title: decodeURI(base58Decode(_G.TIP)),
+          content: decodeURI(base58Decode(_G.TIPC)),
+          maskClosable: false,
+          closable: false,
+          closeOnEsc: false,
+        });
+      }
+      break;
     default:
       message.error(`[${res.code}] ${res.message}`);
       break;
@@ -134,9 +157,12 @@ const initChat = async () => {
   });
 };
 
-const hackStyle = () => {
+const hackStyle = async() => {
   if (location.hostname === 'localhost') {
     CIB.config.sydney.hostnamesToBypassSecureConnection = CIB.config.sydney.hostnamesToBypassSecureConnection.filter((x) => x !== location.hostname);
+  }
+    if (isMobile()) {
+    await sleep(25);
   }
   const serpEle = document.querySelector('cib-serp');
   const conversationEle = serpEle?.shadowRoot?.querySelector('cib-conversation') as HTMLElement;

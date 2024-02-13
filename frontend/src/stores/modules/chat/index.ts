@@ -24,20 +24,12 @@ export const useChatStore = defineStore(
     const selectedSydneyBaseUrl = ref('');
     const sydneyConfigs = ref<SydneyConfig[]>([
       {
-        baseUrl: 'https://sydney.bing.com',
-        label: 'Bing 官方',
-      },
-      {
-        baseUrl: 'https://sydney.vcanbb.chat',
-        label: 'Cloudflare',
-      },
-      {
         baseUrl: location.origin,
-        label: '本站',
+        label: 'Trang web này',
       },
       {
         baseUrl: '',
-        label: '自定义',
+        label: 'Tùy chỉnh',
         isCus: true,
       },
     ]);

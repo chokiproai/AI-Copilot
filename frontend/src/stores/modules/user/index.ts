@@ -4,6 +4,7 @@ import cookies from '@/utils/cookies';
 import sysconfApi from '@/api/sysconf';
 import { ApiResultCode } from '@/api/model/ApiResult';
 import type { SysConfig } from '@/api/model/sysconf/SysConfig';
+import { isMobile } from '@/utils/utils';
 
 export const useUserStore = defineStore(
   'user-store',
@@ -14,6 +15,8 @@ export const useUserStore = defineStore(
     const userMUIDCookieName = 'MUID';
     const authKeyCookieName = 'BingAI_Auth_Key';
     const passServerCookieName = 'BingAI_Pass_Server';
+    const srchhpgusrCookieName = 'SRCHHPGUSR';
+    const bfbusrCookieName = 'BFBUSR';
     const cookiesStr = ref('');
     const historyEnable = ref(true);
     const fullCookiesEnable = ref(false);
@@ -48,20 +51,35 @@ export const useUserStore = defineStore(
       await fetch('/search?q=Bing+AI&showconv=1&FORM=hpcodx&ajaxhist=0&ajaxserp=0&cc=us', {
         credentials: 'include',
       })
-      const token = getUserToken();
-      if (!historyEnable.value || !token || enterpriseEnable.value) {
-        const serpEle = document.querySelector('cib-serp');
-        const sidepanel = serpEle?.shadowRoot?.querySelector('cib-conversation')?.querySelector('cib-side-panel')?.shadowRoot?.querySelector('.main')
-        if (uiVersion.value === 'v2') {
-          const threadsHeader = sidepanel?.querySelector('.threads-header') as HTMLElement;
-          const threadsContainer = sidepanel?.querySelector('.threads-container') as HTMLElement;
-          threadsHeader.style.display = 'none'
-          threadsContainer.style.display = 'none'
+      const muidCookieVal = cookies.get(userMUIDCookieName) || '';
+      const userCookieVal = cookies.get(srchhpgusrCookieName) || '';
+      if (muidCookieVal !== '') {
+        if (userCookieVal === '') {
+          cookies.set(srchhpgusrCookieName, 'CMUID=' + muidCookieVal);
+          cookies.set(bfbusrCookieName, 'CMUID=' + muidCookieVal);
         } else {
-          CIB.vm.sidePanel.panels = [
-            { type: 'plugins', label: 'plugin' }
-          ]
-          CIB.vm.sidePanel.selectedPanel = 'plugins'
+          if (userCookieVal.indexOf('CMUID=') === -1) {
+            cookies.set(srchhpgusrCookieName, userCookieVal + '&CMUID=' + muidCookieVal);
+            cookies.set(bfbusrCookieName, 'CMUID=' + muidCookieVal);
+          }
+        }
+      }
+      const token = getUserToken();
+      if (!isMobile()) {
+        if (!historyEnable.value || !token || enterpriseEnable.value) {
+          const serpEle = document.querySelector('cib-serp');
+          const sidepanel = serpEle?.shadowRoot?.querySelector('cib-conversation')?.querySelector('cib-side-panel')?.shadowRoot?.querySelector('.main')
+          if (uiVersion.value === 'v2') {
+            const threadsHeader = sidepanel?.querySelector('.threads-header') as HTMLElement;
+            const threadsContainer = sidepanel?.querySelector('.threads-container') as HTMLElement;
+            threadsHeader.style.display = 'none'
+            threadsContainer.style.display = 'none'
+          } else {
+            CIB.vm.sidePanel.panels = [
+              { type: 'plugins', label: 'Plugin' }
+            ]
+            CIB.vm.sidePanel.selectedPanel = 'plugins'
+          }
         }
       }
     };
