@@ -193,7 +193,6 @@ const handleSelect = (key: string) => {
         for (let i = 0; i < _G.SP.length; i++) {
           tmpA.push(S[_G.SP[i]]);
         }
-        author.value = base58Decode(tmpA.join(''));
         isShowSetAboutModal.value = true;
         GetLastVersion();
       }
