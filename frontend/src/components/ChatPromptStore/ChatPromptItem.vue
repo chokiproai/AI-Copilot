@@ -8,16 +8,16 @@ defineProps<{
   source: IPrompt;
 }>();
 
-const messgae = useMessage();
+const message = useMessage();
 const promptStore = usePromptStore();
 const { promptList, optPromptConfig } = storeToRefs(promptStore);
 
-const delPrompt = (item) => {
-  promptList.value = promptList.value.filter((x) => x.act !== item.act && x.prompt !== item.prompt);
+const delPrompt = (item: IPrompt) => {
+  promptList.value = promptList.value.filter((x: IPrompt) => x.act !== item.act && x.prompt !== item.prompt);
   message.success('Xóa từ gợi ý thành công');
 };
 
-const showEditPromptPop = (item) => {
+const showEditPromptPop = (item: IPrompt) => {
   optPromptConfig.value.isShow = true;
   optPromptConfig.value.type = 'edit';
   optPromptConfig.value.title = 'Chỉnh sửa từ gợi ý';
