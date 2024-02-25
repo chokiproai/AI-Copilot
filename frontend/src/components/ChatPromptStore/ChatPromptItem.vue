@@ -8,19 +8,19 @@ defineProps<{
   source: IPrompt;
 }>();
 
-const message = useMessage();
+const messgae = useMessage();
 const promptStore = usePromptStore();
 const { promptList, optPromptConfig } = storeToRefs(promptStore);
 
 const delPrompt = (item: IPrompt) => {
-  promptList.value = promptList.value.filter((x: IPrompt) => x.act !== item.act && x.prompt !== item.prompt);
-  message.success('Xóa từ gợi ý thành công');
+  promptList.value = promptList.value.filter((x) => x.act !== item.act && x.prompt !== item.prompt);
+  messgae.success('Xóa lời nhắc thành công');
 };
 
 const showEditPromptPop = (item: IPrompt) => {
   optPromptConfig.value.isShow = true;
   optPromptConfig.value.type = 'edit';
-  optPromptConfig.value.title = 'Chỉnh sửa từ gợi ý';
+  optPromptConfig.value.title = 'Chỉnh sửa từ';
   optPromptConfig.value.tmpPrompt = item;
   optPromptConfig.value.newPrompt = { ...item };
 };
@@ -33,8 +33,8 @@ const showEditPromptPop = (item: IPrompt) => {
         <span class="inline-block max-w-[120px] xl:max-w-[650px] overflow-hidden text-ellipsis">{{ source.act }}</span>
       </NTag>
       <div class="float-right">
-        <NButton secondary type="info" size="small" @click="showEditPromptPop(source)">Chỉnh sửa</NButton>
-        <NButton secondary class="ml-2" type="error" size="small" @click="delPrompt(source)">Xóa</NButton>
+        <NButton secondary type="info" size="small" @click="showEditPromptPop(source)">Edit</NButton>
+        <NButton secondary class="ml-2" type="error" size="small" @click="delPrompt(source)">Xóa bỏ</NButton>
       </div>
     </template>
     <NEllipsis :tooltip="false" :line-clamp="2">{{ source.prompt }}</NEllipsis>
