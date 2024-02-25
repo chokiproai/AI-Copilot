@@ -485,17 +485,20 @@ const autoPassCFChallenge = async () => {
 
 <template>
   <NDropdown v-if="isMobile()" class="select-none" :show="isShowMore" :options="navConfigs" :render-label="renderDropdownLabel" @select="handleSelect">
-    <NImage class="fixed top-6 right-4 cursor-pointer z-50" :src="settingSvgUrl" alt="Menu thiết lập" :preview-disabled="true" @click="isShowMore = !isShowMore" :style="settingIconStyle"></NImage>
+    <NImage class="fixed top-6 right-4 cursor-pointer z-50" :src="settingSvgUrl" alt="设置菜单" :preview-disabled="true" @click="isShowMore = !isShowMore" :style="settingIconStyle"></NImage>
   </NDropdown>
   <NDropdown v-else class="select-none" trigger="hover" :options="navConfigs" :render-label="renderDropdownLabel" @select="handleSelect">
-    <NImage class="fixed top-6 right-6 cursor-pointer z-50" :src="settingSvgUrl" alt="Menu thiết lập" :preview-disabled="true" :style="settingIconStyle"></NImage>
+    <NImage class="fixed top-6 right-6 cursor-pointer z-50" :src="settingSvgUrl" alt="设置菜单" :preview-disabled="true" :style="settingIconStyle"></NImage>
   </NDropdown>
   <NModal v-model:show="isShowLoginModal" preset="dialog" :show-icon="false">
     <template #header>
-      <div class="text-3xl py-2"></div>
+      <div class="text-3xl py-2">账号登录</div>
     </template>
     <div v-if="!isShowIframe" style="margin-top:12px; margin-bottom:24px">
       <NP>
+        使用此功能前, 请先安装<NA href="https://www.tampermonkey.net/">油猴插件</NA>, 并安装<NA href="https://greasyfork.org/zh-CN/scripts/487409-go-proxy-bingai">此脚本</NA>
+        <br>
+        请点击下面「打开登录页面」按钮, 在新打开登录页面中登录账号, 登录成功后点击确定
       </NP>
     </div>
     <div v-else>
@@ -503,61 +506,69 @@ const autoPassCFChallenge = async () => {
       <iframe id="login" src="https://www.bing.com/" style="border: none; width: 0; height: 0" />
     </div>
     <template #action>
-      <NButton size="large" type="info" @click="newWindow"></NButton>
-      <NButton size="large" @click="isShowLoginModal = false"></NButton>
-      <NButton ghost size="large" type="info" @click="loginHandel"></NButton>
+      <NButton size="large" type="info" @click="newWindow">打开登录页面</NButton>
+      <NButton size="large" @click="isShowLoginModal = false">取消</NButton>
+      <NButton ghost size="large" type="info" @click="loginHandel">确定</NButton>
     </template>
   </NModal>
   <NModal v-model:show="isShowSettingModal" preset="dialog" :show-icon="false">
-    <template #header>
-<NModal v-model:show="isShowSettingModal" preset="dialog" :show-icon="false">
-  <template #header>
-    <div class="text-3xl py-2">Cài đặt</div>
-  </template>
-  <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
-    <NGrid x-gap="0" :cols="2">
-      <NGridItem>
-        <NFormItem path="cookiesEnable" label="Tự động xác nhận máy và người">
-          <NButton type="info" :loading="passingCFChallenge" @click="settingMenu('autoPassCFChallenge')">Bật</NButton>
-        </NFormItem>
-      </NGridItem>
-      <NGridItem>
-        <NFormItem path="cookiesEnable" label="Thư viện Từ gợi ý">
-          <NButton type="info" @click="settingMenu('promptStore')">Mở</NButton>
-        </NFormItem>
-      </NGridItem>
-      <NGridItem>
-        <NFormItem path="cookiesEnable" label="Cài đặt Nâng cao">
-          <NButton type="info" @click="settingMenu('advancedSetting')">Mở</NButton>
-        </NFormItem>
-      </NGridItem>
-    </NGrid>
-  </NForm>
-  <template #action>
-    <NButton ghost size="large" type="info" @click="isShowSettingModal = false">Xác nhận</NButton>
-  </template>
-</NModal>
+<template #header>
+  <div class="text-3xl py-2">Cài Đặt</div>
+</template>
+<NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
+  <NGrid x-gap="0" :cols="2">
+    <NGridItem>
+      <NFormItem path="cookiesEnable" label="Tự Động Xác Thực Máy Người">
+        <NButton type="info" :loading="passingCFChallenge" @click="settingMenu('autoPassCFChallenge')">Bật</NButton>
+      </NFormItem>
+    </NGridItem>
+    <NGridItem>
+      <NFormItem path="cookiesEnable" label="Kho Từ Gợi Ý">
+        <NButton type="info" @click="settingMenu('promptStore')">Mở</NButton>
+      </NFormItem>
+    </NGridItem>
+    <NGridItem>
+      <NFormItem path="cookiesEnable" label="Cài Đặt Nâng Cao">
+        <NButton type="info" @click="settingMenu('advancedSetting')">Mở</NButton>
+      </NFormItem>
+    </NGridItem>
+  </NGrid>
+</NForm>
+    <template #action>
+      <NButton ghost size="large" type="info" @click="isShowSettingModal = false">确定</NButton>
+    </template>
+  </NModal>
   <NModal v-model:show="isShowCookieModal" preset="dialog" :show-icon="false">
     <template #header>
-<NModal v-model:show="isShowCookieModal" preset="dialog" :show-icon="false">
-  <template #header>
-    <div class="text-3xl py-2"></div>
-  </template>
-  <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
-    <NFormItem path="cookiesEnable" label="">
-      <NSwitch v-model:value="cookiesEnable" />
-    </NFormItem>
-    </NFormItem>
-  </NForm>
-  <template #action>
-    <NButton size="large" @click="isShowCookieModal = false">Hủy</NButton>
-    <NButton ghost size="large" type="info" @click="saveSetting">Lưu</NButton>
-  </template>
-</NModal>
+      <div class="text-3xl py-2">Cookie 设置</div>
+    </template>
+    <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
+      <NFormItem path="cookiesEnable" label="完整 Cookie">
+        <NSwitch v-model:value="cookiesEnable" />
+      </NFormItem>
+      <NFormItem v-show="!cookiesEnable" path="token" label="Token">
+        <NInput size="large" v-model:value="userToken" type="text" placeholder="用户 Cookie ,仅需要 _U 的值" />
+      </NFormItem>
+      <NFormItem v-show="!cookiesEnable" path="token" label="KievRPSSecAuth">
+        <NInput size="large" v-model:value="userKievRPSSecAuth" type="text" placeholder="用户 Cookie ,仅需要 KievRPSSecAuth 的值" />
+      </NFormItem>
+      <NFormItem v-show="!cookiesEnable" path="token" label="_RwBf">
+        <NInput size="large" v-model:value="userRwBf" type="text" placeholder="用户 Cookie ,仅需要 _RwBf 的值" />
+      </NFormItem>
+      <NFormItem v-show="!cookiesEnable" path="token" label="MUID">
+        <NInput size="large" v-model:value="userMUID" type="text" placeholder="用户 Cookie ,仅需要 MUID 的值" />
+      </NFormItem>
+      <NFormItem v-show="cookiesEnable" path="token" label="Cookies">
+        <NInput size="large" v-model:value="cookies" type="text" placeholder="完整用户 Cookie" />
+      </NFormItem>
+ </NForm>
+    <template #action>
+      <NButton size="large" @click="isShowCookieModal = false">Hủy</NButton>
+      <NButton ghost size="large" type="info" @click="saveSetting">Lưu</NButton>
+    </template>
+  </NModal>
   <NModal v-model:show="isShowAdvancedSettingModal" preset="dialog" :show-icon="false">
     <template #header>
-<NModal v-model:show="isShowAdvancedSettingModal" preset="dialog" :show-icon="false">
-  <template #header>
     <div class="text-3xl py-2">Cài đặt Nâng cao</div>
   </template>
   <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging"
