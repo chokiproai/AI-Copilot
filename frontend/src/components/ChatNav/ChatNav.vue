@@ -81,20 +81,20 @@ let navConfigs = ref([
   },
   {
     key: navType.reset,
-    label: 'Đặt lại',
+    label: 'Đặt lại một lần',
   },
   {
     key: navType.about,
-    label: 'Về'
+    label: 'Giới thiệu'
   },
 ]);
 
 const themeModeOptions = ref([
   {
-    label: 'Chế độ sáng',
+    label: 'Sáng',
     value: 'light',
   }, {
-    label: 'Chế độ tối',
+    label: 'Tối',
     value: 'dark',
   }, {
     label: 'Theo hệ thống',
@@ -160,7 +160,7 @@ const handleSelect = async (key: string) => {
         }
         const serpEle = document.querySelector('cib-serp');
         const conversationEle = serpEle?.shadowRoot?.querySelector('cib-conversation') as HTMLElement;
-        // todo phản hồi tạm thời không thể sử dụng, tạm thời gỡ bỏ
+        // todo Không thể sử dụng phản hồi tạm thời, hãy di chuyển
         const welcomeEle = conversationEle?.shadowRoot?.querySelector('cib-welcome-container');
         const loginTip = welcomeEle?.shadowRoot?.querySelectorAll("div[class='muid-upsell']");
         if (loginTip?.length) {
@@ -173,15 +173,15 @@ const handleSelect = async (key: string) => {
         serpEle?.shadowRoot?.querySelector('cib-serp-feedback')?.remove();
         if (isMobile()) {
           welcomeEle?.shadowRoot?.querySelector('.container-item')?.remove();
-          CIB.vm.actionBar.input.placeholder = 'Có câu hỏi cứ hỏi tôi... ("/" để kích hoạt từ gợi ý)';
+          CIB.vm.actionBar.input.placeholder = 'Có câu hỏi hãy hỏi tôi...（"/" để kích hoạt từ gợi ý）';
         }
-        // thêm css
+        // Thêm css
         const conversationStyleEle = document.createElement('style');
         conversationStyleEle.innerText = conversationCssText;
         conversationEle.shadowRoot?.append(conversationStyleEle);
       }
       break;
-  case navType.notebook:
+    case navType.notebook:
       {
         CIB.showNotebook();
         const galileoIndex = CIB.config.sydney.request.optionsSets.indexOf('galileo');
@@ -208,7 +208,7 @@ const handleSelect = async (key: string) => {
     case navType.createImage:
       {
         if (!userStore.sysConfig?.isSysCK && !userStore.getUserToken()) {
-          message.warning('Để trải nghiệm chức năng vẽ, bạn cần đăng nhập trước');
+          message.warning('Cần đăng nhập để trải nghiệm chức năng tạo hình ảnh');
         }
         isShowCreateImageModal.value = true;
       }
@@ -305,22 +305,22 @@ const saveSetting = () => {
     cookiesStr.value = cookies.value;
   } else {
     if (!userToken.value) {
-      message.warning('Hãy điền vào cookie người dùng _U');
+      message.warning('Vui lòng điền vào Cookie người dùng _U');
     } else {
       userStore.saveUserToken(userToken.value);
     }
     if (!userKievRPSSecAuth.value) {
-      message.warning('Hãy điền vào cookie người dùng KievRPSSecAuth');
+      message.warning('Vui lòng điền vào Cookie người dùng KievRPSSecAuth');
     } else {
       userStore.saveUserKievRPSSecAuth(userKievRPSSecAuth.value);
     }
     if (!userRwBf.value) {
-      message.warning('Hãy điền vào cookie người dùng _RwBf');
+      message.warning('Vui lòng điền vào Cookie người dùng _RwBf');
     } else {
       userStore.saveUserRwBf(userRwBf.value);
     }
     if (!userMUID.value) {
-      message.warning('Hãy điền vào cookie người dùng MUID');
+      message.warning('Vui lòng điền vào Cookie người dùng MUID');
     } else {
       userStore.saveUserMUID(userMUID.value);
     }
@@ -343,33 +343,33 @@ const saveAdvancedSetting = () => {
     userStore.setPassServer(passServerSetting.value)
   }
 
-const serpEle = document.querySelector('cib-serp');
-const sidepanel = serpEle?.shadowRoot?.querySelector('cib-conversation')?.querySelector('cib-side-panel')?.shadowRoot?.querySelector('.main')
-const threadsHeader = sidepanel?.querySelector('.threads-header') as HTMLElement;
-const threadsContainer = sidepanel?.querySelector('.threads-container') as HTMLElement;
-if (!isMobile()) {
-  if (history.value && userStore.getUserToken() && !enterpriseEnable.value) {
-    if (tmpuiVersion === 'v2') {
-      threadsHeader.style.display = 'flex'
-      threadsContainer.style.display = 'block'
+  const serpEle = document.querySelector('cib-serp');
+  const sidepanel = serpEle?.shadowRoot?.querySelector('cib-conversation')?.querySelector('cib-side-panel')?.shadowRoot?.querySelector('.main')
+  const threadsHeader = sidepanel?.querySelector('.threads-header') as HTMLElement;
+  const threadsContainer = sidepanel?.querySelector('.threads-container') as HTMLElement;
+  if (!isMobile()) {
+    if (history.value && userStore.getUserToken() && !enterpriseEnable.value) {
+      if (tmpuiVersion === 'v2') {
+        threadsHeader.style.display = 'flex'
+        threadsContainer.style.display = 'block'
+      } else {
+        CIB.vm.sidePanel.panels = [
+          { type: 'threads', label: 'Hoạt động gần đây' },
+          { type: 'plugins', label: 'Plugin' }
+        ]
+      }
     } else {
-      CIB.vm.sidePanel.panels = [
-        { type: 'threads', label: 'Các hoạt động gần đây' },
-        { type: 'plugins', label: 'Các plugin' }
-      ]
-    }
-  } else {
-    if (tmpuiVersion === 'v2') {
-      threadsHeader.style.display = 'none'
-      threadsContainer.style.display = 'none'
-    } else {
-      CIB.vm.sidePanel.panels = [
-        { type: 'plugins', label: 'Các plugin' }
-      ]
-      CIB.vm.sidePanel.selectedPanel = 'plugins'
+      if (tmpuiVersion === 'v2') {
+        threadsHeader.style.display = 'none'
+        threadsContainer.style.display = 'none'
+      } else {
+        CIB.vm.sidePanel.panels = [
+          { type: 'plugins', label: 'Plugin' }
+        ]
+        CIB.vm.sidePanel.selectedPanel = 'plugins'
+      }
     }
   }
-}
 
   themeMode.value = themeModeSetting.value;
   if (themeModeSetting.value == 'light') {
@@ -450,7 +450,7 @@ const renderHandler = (ele: any) => {
 
 const getCookieTimeoutHandel = async() => {
   await sleep(3000)
-  getCookieTip.value = 'Lấy Cookie mất quá nhiều thời gian, vui lòng kiểm tra cài đặt và kịch bản của phần mở rộng Tampermonkey xem đã được cài đặt đúng chưa';
+  getCookieTip.value = 'Thời gian lấy Cookie quá lâu, vui lòng kiểm tra xem plugin và script đã được cài đặt chính xác chưa';
 }
 
 const autoPassCFChallenge = async () => {
@@ -467,17 +467,17 @@ const autoPassCFChallenge = async () => {
     }),
   }).then((res) => res.json())
   .catch(() => {
-    message.error('Xác nhận máy và người thất bại, vui lòng thử lại');
+    message.error('Xác nhận người dùng thất bại, vui lòng thử lại');
     passingCFChallenge.value = false;
   })
   if (resq['result'] != null && resq['result'] != undefined) {
     userStore.saveCookies(resq['result']['cookies']);
     cookiesStr.value = resq['result']['cookies'];
-    message.success('Tự động vượt qua xác nhận máy và người thành công');
+    message.success('Tự động xác nhận người dùng thành công');
     passingCFChallenge.value = false;
     window.location.href = '/';
   } else {
-    message.error('Xác nhận máy và người thất bại, vui lòng thử lại');
+    message.error('Xác nhận người dùng thất bại, vui lòng thử lại');
     passingCFChallenge.value = false;
   }
 }
@@ -485,20 +485,20 @@ const autoPassCFChallenge = async () => {
 
 <template>
   <NDropdown v-if="isMobile()" class="select-none" :show="isShowMore" :options="navConfigs" :render-label="renderDropdownLabel" @select="handleSelect">
-    <NImage class="fixed top-6 right-4 cursor-pointer z-50" :src="settingSvgUrl" alt="设置菜单" :preview-disabled="true" @click="isShowMore = !isShowMore" :style="settingIconStyle"></NImage>
+    <NImage class="fixed top-6 right-4 cursor-pointer z-50" :src="settingSvgUrl" alt="Menu cài đặt" :preview-disabled="true" @click="isShowMore = !isShowMore" :style="settingIconStyle"></NImage>
   </NDropdown>
   <NDropdown v-else class="select-none" trigger="hover" :options="navConfigs" :render-label="renderDropdownLabel" @select="handleSelect">
-    <NImage class="fixed top-6 right-6 cursor-pointer z-50" :src="settingSvgUrl" alt="设置菜单" :preview-disabled="true" :style="settingIconStyle"></NImage>
+    <NImage class="fixed top-6 right-6 cursor-pointer z-50" :src="settingSvgUrl" alt="Menu cài đặt" :preview-disabled="true" :style="settingIconStyle"></NImage>
   </NDropdown>
   <NModal v-model:show="isShowLoginModal" preset="dialog" :show-icon="false">
     <template #header>
-      <div class="text-3xl py-2">账号登录</div>
+      <div class="text-3xl py-2">Đăng nhập tài khoản</div>
     </template>
     <div v-if="!isShowIframe" style="margin-top:12px; margin-bottom:24px">
       <NP>
-        使用此功能前, 请先安装<NA href="https://www.tampermonkey.net/">油猴插件</NA>, 并安装<NA href="https://greasyfork.org/zh-CN/scripts/487409-go-proxy-bingai">此脚本</NA>
+        Trước khi sử dụng chức năng này, vui lòng cài đặt trước<NA href="https://www.tampermonkey.net/">plugin Tampermonkey</NA>, và cài đặt<NA href="https://greasyfork.org/zh-CN/scripts/487409-go-proxy-bingai">script này</NA>
         <br>
-        请点击下面「打开登录页面」按钮, 在新打开登录页面中登录账号, 登录成功后点击确定
+        Vui lòng nhấp vào nút "Mở trang đăng nhập" dưới đây, đăng nhập tài khoản trên trang mới mở ra, sau khi đăng nhập thành công nhấp vào OK
       </NP>
     </div>
     <div v-else>
@@ -506,62 +506,67 @@ const autoPassCFChallenge = async () => {
       <iframe id="login" src="https://www.bing.com/" style="border: none; width: 0; height: 0" />
     </div>
     <template #action>
-      <NButton size="large" type="info" @click="newWindow">打开登录页面</NButton>
-      <NButton size="large" @click="isShowLoginModal = false">取消</NButton>
-      <NButton ghost size="large" type="info" @click="loginHandel">确定</NButton>
+      <NButton size="large" type="info" @click="newWindow">Mở trang đăng nhập</NButton>
+      <NButton size="large" @click="isShowLoginModal = false">Hủy</NButton>
+      <NButton ghost size="large" type="info" @click="loginHandel">OK</NButton>
     </template>
   </NModal>
   <NModal v-model:show="isShowSettingModal" preset="dialog" :show-icon="false">
-<template #header>
-  <div class="text-3xl py-2">Cài Đặt</div>
-</template>
-<NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
-  <NGrid x-gap="0" :cols="2">
-    <NGridItem>
-      <NFormItem path="cookiesEnable" label="Tự Động Xác Thực Máy Người">
-        <NButton type="info" :loading="passingCFChallenge" @click="settingMenu('autoPassCFChallenge')">Bật</NButton>
-      </NFormItem>
-    </NGridItem>
-    <NGridItem>
-      <NFormItem path="cookiesEnable" label="Kho Từ Gợi Ý">
-        <NButton type="info" @click="settingMenu('promptStore')">Mở</NButton>
-      </NFormItem>
-    </NGridItem>
-    <NGridItem>
-      <NFormItem path="cookiesEnable" label="Cài Đặt Nâng Cao">
-        <NButton type="info" @click="settingMenu('advancedSetting')">Mở</NButton>
-      </NFormItem>
-    </NGridItem>
-  </NGrid>
-</NForm>
+    <template #header>
+      <div class="text-3xl py-2">Cài đặt</div>
+    </template>
+    <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
+      <NGrid x-gap="0" :cols="2">
+        <NGridItem>
+          <NFormItem path="cookiesEnable" label="Xác nhận người dùng tự động">
+            <NButton type="info" :loading="passingCFChallenge" @click="settingMenu('autoPassCFChallenge')">Khởi động</NButton>
+          </NFormItem>
+        </NGridItem>
+        <NGridItem>
+          <NFormItem path="cookiesEnable" label="Đăng nhập">
+            <NButton type="info" @click="settingMenu('login')">Mở</NButton>
+          </NFormItem>
+        </NGridItem>
+        <NGridItem>
+          <NFormItem path="cookiesEnable" label="Thư viện từ gợi ý">
+            <NButton type="info" @click="settingMenu('promptStore')">Mở</NButton>
+          </NFormItem>
+        </NGridItem>
+        <NGridItem>
+          <NFormItem path="cookiesEnable" label="Cài đặt nâng cao">
+            <NButton type="info" @click="settingMenu('advancedSetting')">Mở</NButton>
+          </NFormItem>
+        </NGridItem>
+      </NGrid>
+    </NForm>
     <template #action>
-      <NButton ghost size="large" type="info" @click="isShowSettingModal = false">确定</NButton>
+      <NButton ghost size="large" type="info" @click="isShowSettingModal = false">OK</NButton>
     </template>
   </NModal>
   <NModal v-model:show="isShowCookieModal" preset="dialog" :show-icon="false">
     <template #header>
-      <div class="text-3xl py-2">Cookie 设置</div>
+      <div class="text-3xl py-2">Cài đặt Cookie</div>
     </template>
     <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
-      <NFormItem path="cookiesEnable" label="完整 Cookie">
+      <NFormItem path="cookiesEnable" label="Cookie đầy đủ">
         <NSwitch v-model:value="cookiesEnable" />
       </NFormItem>
       <NFormItem v-show="!cookiesEnable" path="token" label="Token">
-        <NInput size="large" v-model:value="userToken" type="text" placeholder="用户 Cookie ,仅需要 _U 的值" />
+        <NInput size="large" v-model:value="userToken" type="text" placeholder="Chỉ cần giá trị _U của Cookie người dùng" />
       </NFormItem>
       <NFormItem v-show="!cookiesEnable" path="token" label="KievRPSSecAuth">
-        <NInput size="large" v-model:value="userKievRPSSecAuth" type="text" placeholder="用户 Cookie ,仅需要 KievRPSSecAuth 的值" />
+        <NInput size="large" v-model:value="userKievRPSSecAuth" type="text" placeholder="Chỉ cần giá trị KievRPSSecAuth của Cookie người dùng" />
       </NFormItem>
       <NFormItem v-show="!cookiesEnable" path="token" label="_RwBf">
-        <NInput size="large" v-model:value="userRwBf" type="text" placeholder="用户 Cookie ,仅需要 _RwBf 的值" />
+        <NInput size="large" v-model:value="userRwBf" type="text" placeholder="Chỉ cần giá trị _RwBf của Cookie người dùng" />
       </NFormItem>
       <NFormItem v-show="!cookiesEnable" path="token" label="MUID">
-        <NInput size="large" v-model:value="userMUID" type="text" placeholder="用户 Cookie ,仅需要 MUID 的值" />
+        <NInput size="large" v-model:value="userMUID" type="text" placeholder="Chỉ cần giá trị MUID của Cookie người dùng" />
       </NFormItem>
       <NFormItem v-show="cookiesEnable" path="token" label="Cookies">
-        <NInput size="large" v-model:value="cookies" type="text" placeholder="完整用户 Cookie" />
+        <NInput size="large" v-model:value="cookies" type="text" placeholder="Cookie người dùng đầy đủ" />
       </NFormItem>
- </NForm>
+    </NForm>
     <template #action>
       <NButton size="large" @click="isShowCookieModal = false">Hủy</NButton>
       <NButton ghost size="large" type="info" @click="saveSetting">Lưu</NButton>
@@ -569,83 +574,77 @@ const autoPassCFChallenge = async () => {
   </NModal>
   <NModal v-model:show="isShowAdvancedSettingModal" preset="dialog" :show-icon="false">
     <template #header>
-    <div class="text-3xl py-2">Cài đặt Nâng cao</div>
-  </template>
-  <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging"
-    style="margin-top: 16px;">
-    <NGrid x-gap="0" :cols="2">
-      <NGridItem>
-        <NFormItem path="history" label="Lịch sử">
-          <NSwitch v-model:value="history" />
-        </NFormItem>
-      </NGridItem>
-      <NGridItem>
-        <NFormItem path="enterpriseEnable" label="Phiên bản Doanh nghiệp">
-          <NSwitch v-model:value="enterpriseSetting" />
-        </NFormItem>
-      </NGridItem>
-      <NGridItem>
-        <NFormItem path="gpt4tEnable" label="GPT4 Turbo">
-          <NSwitch v-model:value="gpt4tSetting" />
-        </NFormItem>
-      </NGridItem>
-      <NGridItem>
-        <NFormItem path="sydneyEnable" label="Chế độ Jailbreak">
-          <NSwitch v-model:value="sydneySetting" />
-        </NFormItem>
-      </NGridItem>
-    </NGrid>
-    <NFormItem path="sydneyPrompt" label="Máy chủ xác nhận máy và người">
-      <NInput size="large" v-model:value="passServerSetting" type="text" placeholder="Máy chủ xác nhận máy và người" />
-    </NFormItem>
-    <NFormItem path="sydneyPrompt" label="Từ gợi ý">
-      <NInput size="large" v-model:value="sydneyPromptSetting" type="text" placeholder="Từ gợi ý cho chế độ Jailbreak" />
-    </NFormItem>
-    <NFormItem path="themeMode" label="Phiên bản UI">
-      <NSelect v-model:value="uiVersionSetting" :options="uiVersionOptions" size="large" placeholder="Vui lòng chọn Phiên bản UI" />
-    </NFormItem>
-    <NFormItem path="themeMode" label="Chế độ Chủ đề">
-      <NSelect v-model:value="themeModeSetting" :options="themeModeOptions" size="large" placeholder="Vui lòng chọn Chế độ Chủ đề" />
-    </NFormItem>
-    <NFormItem v-show="!cookiesEnable" path="customChatNum" label="Số lần trò chuyện">
-      <NInputNumber size="large" v-model:value="customChatNumSetting" min="0" style="width: 100%;"/>
-    </NFormItem>
-  </NForm>
-</NModal>
-
-<NForm>
-  <template #action>
-    <NButton size="large" @click="isShowAdvancedSettingModal = false">Hủy</NButton>
-    <NButton ghost size="large" type="info" @click="saveAdvancedSetting">Lưu</NButton>
-  </template>
-</NModal>
-
-<NModal v-model:show="isShowClearCacheModal" preset="dialog" :show-icon="false">
-  <template #header>
-    <div class="text-xl py-2">Bạn có chắc muốn xóa tất cả bộ nhớ cache, bao gồm cả Cookie không?</div>
-  </template>
-  <template #action>
-    <NButton size="large" @click="isShowClearCacheModal = false">Hủy</NButton>
-    <NButton ghost size="large" type="error" @click="resetCache">Xác nhận</NButton>
-  </template>
-</NModal>
-
-<NModal v-model:show="isShowSetAboutModal" preset="dialog" :show-icon="false">
-  <template #header>
-    <div class="text-3xl py-2">Thông tin</div>
-  </template>
-  <NForm ref="formRef" label-placement="left" label-width="82px" size="small" style="margin-top: 16px;">
-    <NFormItem path="version" label="Số phiên bản">
-      <NTag type="info" size="small" round>{{ 'v' + localVersion }}</NTag>
-    </NFormItem>
-    <NFormItem path="latestVersion" label="Phiên bản mới nhất" id="latestVersion" ref="latestVersion">
-      <NTag type="info" size="small" round>{{ lastVersion }}</NTag>
-    </NFormItem>
-  </NForm>
-  <template #action>
-    <NButton ghost size="large" @click="isShowSetAboutModal = false" type="info">Xác nhận</NButton>
-  </template>
-</NModal>
-
-<CreateImage v-model:show="isShowCreateImageModal" />
+      <div class="text-3xl py-2">Cài đặt nâng cao</div>
+    </template>
+    <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging"
+      style="margin-top: 16px;">
+      <NGrid x-gap="0" :cols="2">
+        <NGridItem>
+          <NFormItem path="history" label="Lịch sử">
+            <NSwitch v-model:value="history" />
+          </NFormItem>
+        </NGridItem>
+        <NGridItem>
+          <NFormItem path="enterpriseEnable" label="Phiên bản doanh nghiệp">
+            <NSwitch v-model:value="enterpriseSetting" />
+          </NFormItem>
+        </NGridItem>
+        <NGridItem>
+          <NFormItem path="gpt4tEnable" label="GPT4 Turbo">
+            <NSwitch v-model:value="gpt4tSetting" />
+          </NFormItem>
+        </NGridItem>
+        <NGridItem>
+          <NFormItem path="sydneyEnable" label="Chế độ Jailbreak">
+            <NSwitch v-model:value="sydneySetting" />
+          </NFormItem>
+        </NGridItem>
+      </NGrid>
+      <NFormItem path="sydneyPrompt" label="Máy chủ xác minh người dùng">
+        <NInput size="large" v-model:value="passServerSetting" type="text" placeholder="Máy chủ xác minh người dùng" />
+      </NFormItem>
+      <NFormItem path="sydneyPrompt" label="Từ gợi ý">
+        <NInput size="large" v-model:value="sydneyPromptSetting" type="text" placeholder="Từ gợi ý chế độ Jailbreak" />
+      </NFormItem>
+      <NFormItem path="themeMode" label="Phiên bản UI">
+        <NSelect v-model:value="uiVersionSetting" :options="uiVersionOptions" size="large" placeholder="Vui lòng chọn phiên bản UI" />
+      </NFormItem>
+      <NFormItem path="themeMode" label="Chế độ chủ đề">
+        <NSelect v-model:value="themeModeSetting" :options="themeModeOptions" size="large" placeholder="Vui lòng chọn chế độ chủ đề" />
+      </NFormItem>
+      <NFormItem v-show="!cookiesEnable" path="customChatNum" label="Số lần trò chuyện">
+        <NInputNumber size="large" v-model:value="customChatNumSetting" min="0" style="width: 100%;"/>
+      </NFormItem>
+    </NForm>
+    <template #action>
+      <NButton size="large" @click="isShowAdvancedSettingModal = false">Hủy</NButton>
+      <NButton ghost size="large" type="info" @click="saveAdvancedSetting">Lưu</NButton>
+    </template>
+  </NModal>
+  <NModal v-model:show="isShowClearCacheModal" preset="dialog" :show-icon="false">
+    <template #header>
+      <div class="text-xl py-2">Bạn có muốn xóa tất cả bộ nhớ cache bao gồm Cookie không?</div>
+    </template>
+    <template #action>
+      <NButton size="large" @click="isShowClearCacheModal = false">Hủy</NButton>
+      <NButton ghost size="large" type="error" @click="resetCache">Đồng ý</NButton>
+    </template>
+  </NModal>
+  <NModal v-model:show="isShowSetAboutModal" preset="dialog" :show-icon="false">
+    <template #header>
+      <div class="text-3xl py-2">Giới thiệu</div>
+    </template>
+    <NForm ref="formRef" label-placement="left" label-width="82px" size="small" style="margin-top: 16px;">
+      <NFormItem path="version" label="Phiên bản">
+        <NTag type="info" size="small" round>{{ 'v' + localVersion }}</NTag>
+      </NFormItem>
+      <NFormItem path="latestVersion" label="Phiên bản mới nhất" id="latestVersion" ref="latestVersion">
+        <NTag type="info" size="small" round>{{ lastVersion }}</NTag>
+      </NFormItem>
+    </NForm>
+    <template #action>
+      <NButton ghost size="large" @click="isShowSetAboutModal = false" type="info">OK</NButton>
+    </template>
+  </NModal>
+  <CreateImage v-model:show="isShowCreateImageModal" />
 </template>
