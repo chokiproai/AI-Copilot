@@ -12,12 +12,12 @@ const messgae = useMessage();
 const promptStore = usePromptStore();
 const { promptList, optPromptConfig } = storeToRefs(promptStore);
 
-const delPrompt = (item: IPrompt) => {
+const delPrompt = (item) => {
   promptList.value = promptList.value.filter((x) => x.act !== item.act && x.prompt !== item.prompt);
-  messgae.success('Đã xóa từ gợi ý');
+  message.success('Xóa từ gợi ý thành công');
 };
 
-const showEditPromptPop = (item: IPrompt) => {
+const showEditPromptPop = (item) => {
   optPromptConfig.value.isShow = true;
   optPromptConfig.value.type = 'edit';
   optPromptConfig.value.title = 'Chỉnh sửa từ gợi ý';

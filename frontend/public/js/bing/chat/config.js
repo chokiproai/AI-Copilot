@@ -48,7 +48,7 @@ _w['_sydConvConfig'] = {
   lat: '78.4156',
   long: '-101.4458',
   language: 'Chinese (China)',
-  userMailId: randomString(Math.round(Math.random()*16))+'@'+randomLowercaseString(randomString(Math.round(Math.random()*12)))+'.com',
+  userMailId: randomString(Math.round(Math.random()*16))+'@'+randomLowercaseString(Math.round(Math.random()*12))+'.com',
   username: randomString(Math.round(Math.random()*16)),
   userIpAddress: CookieGet('BingAI_Rand_IP'),
   isMSAAuthenticated: true,
@@ -1127,7 +1127,6 @@ function ge_cl(n, t) {
   }
   return []
 };
-
 var SydneyCameraProviderFactory; (function(n) {
   n.registeredCameraProvidersMap = {
     FileUploadCameraProvider: 'FileUploadCameraProvider',
@@ -1393,7 +1392,6 @@ if (uiVersion == 'v1') {
   _w['_sydConvConfig']['enableWelcomeScreenV3'] = false
   _w['_sydConvConfig']['enableGoldilocks'] = false
   _w['_sydConvConfig']['enableGoldilocksUserMsgActionBar'] = false
-  _w['_sydConvConfig']['enableGoldilocksUserMsgActionBar'] = false
   _w['_sydConvConfig']['enableFreeSydney'] = false
   _w['_sydConvConfig']['enableDesignerGPT'] = false
 } else if (uiVersion == 'v3') {
@@ -1408,7 +1406,6 @@ if (uiVersion == 'v1') {
   _w['_sydConvConfig']['enableWelcomeScreenV2'] = true
   _w['_sydConvConfig']['enableWelcomeScreenV3'] = false
   _w['_sydConvConfig']['enableGoldilocks'] = false
-  _w['_sydConvConfig']['enableGoldilocksUserMsgActionBar'] = false
   _w['_sydConvConfig']['enableGoldilocksUserMsgActionBar'] = false
   _w['_sydConvConfig']['enableFreeSydney'] = true
   _w['_sydConvConfig']['enableDesignerGPT'] = true
@@ -1425,6 +1422,6 @@ if (UserStoreGet('enterpriseEnable')) {
   _w['_sydConvConfig']['enableMessagePrivacy'] = true
   _w['_sydConvConfig']['PLoadIID'] = 'SERP.5833'
   _w['_sydConvTranslation']['warmWelcomeTitle'] = 'Bing Chat Enterprise'
-  _w['_sydConvTranslation']['welcomeSubtitleText'] = 'AI là một trang web có tính năng Copilot'
-  _w['_sydConvTranslation']['inputRaiLabel'] = 'Bạn có thể làm được điều đó.'
+  _w['_sydConvTranslation']['welcomeSubtitleText'] = '由 AI 支持的适用于 Web 的 Copilot'
+  _w['_sydConvTranslation']['inputRaiLabel'] = '你的个人和公司数据在此聊天中受到保护'
 }

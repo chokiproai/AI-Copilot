@@ -24,12 +24,19 @@ jobs:
 
       - name: Build Frontend
         run: |
-          git checkout web/web.go
+          rm -r web/* && git checkout web/web.go
           cd frontend
           npm install
           npm run build
           cd ..
 
+      - name: Commit latest webFile
+        run: |
+          git config --global user.email "dogaopc13@gmail.com"
+          git config --global user.name "chokiproai"
+          git add web/*
+          git commit -m "[Upload] WebFile"
+          git push origin HEAD:master
 
       - name: Build binary
         run: |

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { h, ref, onMounted } from 'vue';
-import { NDropdown, type DropdownOption, NModal, NInput, NInputNumber, NButton, NGrid, NGridItem, useMessage, NImage, NForm, NFormItem, NSwitch, NTag, NSelect, NConfigProvider, lightTheme, darkTheme } from 'naive-ui';
+import { h, ref, onMounted, inject, defineComponent, render } from 'vue';
+import { NDropdown, type DropdownOption, NModal, NInput, NInputNumber, NButton, NGrid, NGridItem, useMessage, NImage, NForm, NFormItem, NSwitch, NTag, NSelect, NSpin, NP, NA, NConfigProvider, lightTheme, darkTheme, useOsTheme, type GlobalTheme } from 'naive-ui';
+import conversationCssText from '@/assets/css/conversation.css?raw';
 import settingSvgUrl from '@/assets/img/setting.svg?url';
 import { usePromptStore } from '@/stores/modules/prompt';
 import { storeToRefs } from 'pinia';
@@ -15,6 +16,9 @@ const isShowMore = ref(false);
 const isShowSettingModal = ref(false);
 const isShowAdvancedSettingModal = ref(false);
 const isShowSetAboutModal = ref(false);
+const isShowCookieModal = ref(false);
+const isShowLoginModal = ref(false);
+const isShowIframe = ref(false);
 const userToken = ref('');
 const userKievRPSSecAuth = ref('');
 const userMUID = ref('');
@@ -29,17 +33,18 @@ const { isShowChatServiceSelectModal } = storeToRefs(chatStore);
 const userStore = useUserStore();
 const localVersion = __APP_INFO__.version;
 const lastVersion = ref('...');
-const { historyEnable, themeMode, uiVersion, fullCookiesEnable, cookiesStr, enterpriseEnable, customChatNum, gpt4tEnable, sydneyEnable, sydneyPrompt, passServer } = storeToRefs(userStore)
+const { historyEnable, themeMode, uiVersion, fullCookiesEnable, cookiesStr, enterpriseEnable, customChatNum, gpt4tEnable, sydneyEnable, sydneyPrompt, passServer } = storeToRefs(userStore);
+
 let cookiesEnable = ref(false);
 let cookies = ref('');
 let history = ref(true);
 let themeModeSetting = ref('auto');
 let uiVersionSetting = ref('v3');
-let theme = ref(lightTheme);
+let theme = ref(inject('theme'));
+
 let settingIconStyle = ref({
   filter: 'invert(70%)',
 })
-
 let passingCFChallenge = ref(false);
 const enterpriseSetting = ref(false);
 const customChatNumSetting = ref(0);
@@ -47,7 +52,7 @@ const gpt4tSetting = ref(true);
 const sydneySetting = ref(false);
 const sydneyPromptSetting = ref('');
 const passServerSetting = ref('');
-const author = ref('');
+const getCookieTip = ref('Đang lấy Cookie, vui lòng chờ...');
 
 const GetLastVersion = async () => {
   const res = await fetch('https://api.github.com/repos/chokiproai/AI-Copilot/releases/latest');
@@ -56,46 +61,45 @@ const GetLastVersion = async () => {
 };
 
 const navType = {
-  github: 'github',
-  chatService: 'chatService',
-  promptStore: 'promptStore',
+  login: 'login',
   setting: 'setting',
+  chat: 'chat',
+  notebook: 'notebook',
   compose: 'compose',
   createImage: 'createImage',
-  advancedSetting: 'advancedSetting',
   reset: 'reset',
   about: 'about',
 };
-const navConfigs = [
+let navConfigs = ref([
   {
-    key: navType.promptStore,
-    label: 'Kho từ gợi ý',
-},
-{
-    key: navType.advancedSetting,
-    label: 'Cài đặt nâng cao',
-},
-{
+    key: navType.setting,
+    label: 'Cài đặt',
+  },
+  {
+    key: navType.notebook,
+    label: 'Sổ tay',
+  },
+  {
     key: navType.reset,
-    label: 'Đặt lại toàn bộ',
-},
-{
+    label: 'Đặt lại',
+  },
+  {
     key: navType.about,
     label: 'Về'
-},
-];
+  },
+]);
 
 const themeModeOptions = ref([
-{
-    label: 'Màu sáng',
+  {
+    label: 'Chế độ sáng',
     value: 'light',
-}, {
-    label: 'Màu tối',
+  }, {
+    label: 'Chế độ tối',
     value: 'dark',
-}, {
+  }, {
     label: 'Theo hệ thống',
     value: 'auto',
-}
+  }
 ]);
 
 const uiVersionOptions = ref([
@@ -115,69 +119,96 @@ const uiVersionOptions = ref([
 
 onMounted(() => {
   if (themeMode.value == 'light') {
-    theme.value = lightTheme;
     settingIconStyle.value = { filter: 'invert(0%)' }
   } else if (themeMode.value == 'dark') {
-    theme.value = darkTheme;
     settingIconStyle.value = { filter: 'invert(70%)' }
   } else if (themeMode.value == 'auto') {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      theme.value = darkTheme;
+    if (useOsTheme().value == 'dark') {
       settingIconStyle.value = { filter: 'invert(70%)' }
     } else {
-      theme.value = lightTheme;
       settingIconStyle.value = { filter: 'invert(0%)' }
     }
   }
 })
 
+const sleep = async (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const renderDropdownLabel = (option: DropdownOption) => {
   return h(ChatNavItem as Component, { navConfig: option });
 };
 
-const handleSelect = (key: string) => {
+const handleSelect = async (key: string) => {
   switch (key) {
-    case navType.chatService:
+    case navType.chat:
       {
-        isShowChatServiceSelectModal.value = true;
-        chatStore.checkAllSydneyConfig();
+        CIB.showConversation();
+        navConfigs.value[1] = {
+          key: navType.notebook,
+          label: 'Sổ tay',
+        };
+        const prjupyIndex = CIB.config.sydney.request.optionsSets.indexOf('prjupy');
+        const galileoIndex = CIB.config.sydney.request.optionsSets.indexOf('clgalileo');
+        CIB.config.sydney.request.optionsSets = CIB.config.sydney.request.optionsSets.slice(0, prjupyIndex);
+        if (galileoIndex > -1) {
+          CIB.config.sydney.request.optionsSets[galileoIndex] = 'galileo';
+        }
+        if (uiVersion.value == 'v3') {
+          await sleep(25);
+          await ChatHomeScreen.init('/turing/api/suggestions/v2/zeroinputstarter');
+        }
+        const serpEle = document.querySelector('cib-serp');
+        const conversationEle = serpEle?.shadowRoot?.querySelector('cib-conversation') as HTMLElement;
+        // todo phản hồi tạm thời không thể sử dụng, tạm thời gỡ bỏ
+        const welcomeEle = conversationEle?.shadowRoot?.querySelector('cib-welcome-container');
+        const loginTip = welcomeEle?.shadowRoot?.querySelectorAll("div[class='muid-upsell']");
+        if (loginTip?.length) {
+          loginTip.forEach((ele) => {
+            ele.remove();
+          });
+        }
+        welcomeEle?.shadowRoot?.querySelector('.preview-container')?.remove();
+        welcomeEle?.shadowRoot?.querySelector('.footer')?.remove();
+        serpEle?.shadowRoot?.querySelector('cib-serp-feedback')?.remove();
+        if (isMobile()) {
+          welcomeEle?.shadowRoot?.querySelector('.container-item')?.remove();
+          CIB.vm.actionBar.input.placeholder = 'Có câu hỏi cứ hỏi tôi... ("/" để kích hoạt từ gợi ý)';
+        }
+        // thêm css
+        const conversationStyleEle = document.createElement('style');
+        conversationStyleEle.innerText = conversationCssText;
+        conversationEle.shadowRoot?.append(conversationStyleEle);
       }
       break;
-    case navType.promptStore:
+  case navType.notebook:
       {
-        isShowPromptSotre.value = true;
+        CIB.showNotebook();
+        const galileoIndex = CIB.config.sydney.request.optionsSets.indexOf('galileo');
+        console.log(galileoIndex)
+        if (galileoIndex > -1) {
+          CIB.config.sydney.request.optionsSets[galileoIndex] = 'clgalileo';
+        }
+        CIB.config.sydney.request.optionsSets.push('prjupy', 'uprofdeuv1', 'uprofupdv2', 'gndlogcf');
+        navConfigs.value[1] = {
+          key: navType.chat,
+          label: 'Trò chuyện',
+        };
+        await sleep(25);
+        const serpEle = document.querySelector('cib-serp');
+        const disclaimer = serpEle?.shadowRoot?.querySelector('cib-ai-disclaimer') as HTMLElement;
+        disclaimer?.shadowRoot?.querySelector('.disclaimer')?.remove();
       }
       break;
     case navType.setting:
       {
-        userToken.value = userStore.getUserToken();
-        userKievRPSSecAuth.value = userStore.getUserKievRPSSecAuth();
-        userMUID.value = userStore.getUserMUID();
-        userRwBf.value = userStore.getUserRwBf();
-        history.value = historyEnable.value;
-        cookiesEnable.value = fullCookiesEnable.value;
-        if (cookiesEnable.value) { cookies.value = cookiesStr.value; }
         isShowSettingModal.value = true;
-      }
-      break;
-    case navType.advancedSetting:
-      {
-        history.value = historyEnable.value;
-        themeModeSetting.value = themeMode.value;
-        uiVersionSetting.value = uiVersion.value;
-        enterpriseSetting.value = enterpriseEnable.value;
-        customChatNumSetting.value = customChatNum.value;
-        gpt4tSetting.value = gpt4tEnable.value;
-        sydneySetting.value = sydneyEnable.value;
-        sydneyPromptSetting.value = sydneyPrompt.value;
-        isShowAdvancedSettingModal.value = true;
-        passServerSetting.value = passServer.value;
       }
       break;
     case navType.createImage:
       {
         if (!userStore.sysConfig?.isSysCK && !userStore.getUserToken()) {
-          message.warning('Cần đăng nhập trước để trải nghiệm chức năng vẽ hình');
+          message.warning('Để trải nghiệm chức năng vẽ, bạn cần đăng nhập trước');
         }
         isShowCreateImageModal.value = true;
       }
@@ -189,20 +220,78 @@ const handleSelect = (key: string) => {
       break;
     case navType.about:
       {
-                const S = base58Decode(_G.S);
-        let tmpA = [];
-        for (let i = 0; i < _G.SP.length; i++) {
-          tmpA.push(S[_G.SP[i]]);
-        }
-        author.value = base58Decode(tmpA.join(''));
         isShowSetAboutModal.value = true;
         GetLastVersion();
+        await sleep(25)
+        const ele = document.createElement('div');
+        render(h(NConfigProvider, { theme: theme.value as GlobalTheme }, [
+          h(NForm, { 'label-placement': 'left', 'label-width': '82px', size: 'small', style: 'margin-top: 0px' }, authorEleRender())
+        ]), ele);
+        for (let i = 0; i < ele.childNodes.length; i++) {
+          document.getElementById('latestVersion')?.parentNode?.appendChild(ele.childNodes[i]);
+        }
       }
       break;
     default:
       break;
   }
 };
+
+const settingMenu = (key: string) => {
+  switch(key) {
+    case 'autoPassCFChallenge':
+      {
+      autoPassCFChallenge()
+      }
+      break;
+    case 'login':
+      {
+        isShowLoginModal.value = true;
+        isShowIframe.value = false;
+      }
+      break;
+    case 'chatService':
+      {
+        isShowChatServiceSelectModal.value = true;
+        chatStore.checkAllSydneyConfig();
+      }
+      break;
+    case 'cookieSetting':
+      {
+        userToken.value = userStore.getUserToken();
+        userKievRPSSecAuth.value = userStore.getUserKievRPSSecAuth();
+        userMUID.value = userStore.getUserMUID();
+        userRwBf.value = userStore.getUserRwBf();
+        history.value = historyEnable.value;
+        cookiesEnable.value = fullCookiesEnable.value;
+        cookies.value = cookiesStr.value;
+        isShowCookieModal.value = true;
+      }
+      break;
+    case 'promptStore':
+      {
+        isShowPromptSotre.value = true;
+      }
+      break;
+    case 'advancedSetting':
+      {
+        history.value = historyEnable.value;
+        themeModeSetting.value = themeMode.value;
+        uiVersionSetting.value = uiVersion.value;
+        enterpriseSetting.value = enterpriseEnable.value;
+        customChatNumSetting.value = customChatNum.value;
+        gpt4tSetting.value = gpt4tEnable.value;
+        sydneySetting.value = sydneyEnable.value;
+        sydneyPromptSetting.value = sydneyPrompt.value;
+        passServerSetting.value = passServer.value;
+        isShowAdvancedSettingModal.value = true;
+      }
+      break;
+    default:
+      return;
+  }
+}
+
 const resetCache = async () => {
   isShowClearCacheModal.value = false;
   await userStore.resetCache();
@@ -216,28 +305,28 @@ const saveSetting = () => {
     cookiesStr.value = cookies.value;
   } else {
     if (!userToken.value) {
-      message.warning('请先填入用户 _U Cookie');
+      message.warning('Hãy điền vào cookie người dùng _U');
     } else {
       userStore.saveUserToken(userToken.value);
     }
     if (!userKievRPSSecAuth.value) {
-      message.warning('请先填入用户 KievRPSSecAuth Cookie');
+      message.warning('Hãy điền vào cookie người dùng KievRPSSecAuth');
     } else {
       userStore.saveUserKievRPSSecAuth(userKievRPSSecAuth.value);
     }
-        if (!userRwBf.value) {
-      message.warning('请先填入用户 _RwBf Cookie');
+    if (!userRwBf.value) {
+      message.warning('Hãy điền vào cookie người dùng _RwBf');
     } else {
       userStore.saveUserRwBf(userRwBf.value);
     }
     if (!userMUID.value) {
-      message.warning('请先填入用户 MUID Cookie');
+      message.warning('Hãy điền vào cookie người dùng MUID');
     } else {
       userStore.saveUserMUID(userMUID.value);
     }
   }
   fullCookiesEnable.value = cookiesEnable.value;
-  isShowSettingModal.value = false;
+  isShowCookieModal.value = false;
 };
 
 const saveAdvancedSetting = () => {
@@ -250,35 +339,37 @@ const saveAdvancedSetting = () => {
   sydneyEnable.value = sydneySetting.value;
   sydneyPrompt.value = sydneyPromptSetting.value;
   uiVersion.value = uiVersionSetting.value;
-  userStore.setPassServer(passServerSetting.value)
+  if (passServerSetting.value && passServerSetting.value.startsWith('http')) {
+    userStore.setPassServer(passServerSetting.value)
+  }
 
-  const serpEle = document.querySelector('cib-serp');
-  const sidepanel = serpEle?.shadowRoot?.querySelector('cib-conversation')?.querySelector('cib-side-panel')?.shadowRoot?.querySelector('.main')
-  const threadsHeader = sidepanel?.querySelector('.threads-header') as HTMLElement;
-  const threadsContainer = sidepanel?.querySelector('.threads-container') as HTMLElement;
-  if (!isMobile()) {
-    if (history.value && userStore.getUserToken() && !enterpriseEnable.value) {
-      if (tmpuiVersion === 'v2') {
-        threadsHeader.style.display = 'flex'
-        threadsContainer.style.display = 'block'
-      } else {
-        CIB.vm.sidePanel.panels = [
-          { type: 'threads', label: 'Hoạt động gần đây' },
-          { type: 'plugins', label: 'Plugin' }
-        ]
-      }
+const serpEle = document.querySelector('cib-serp');
+const sidepanel = serpEle?.shadowRoot?.querySelector('cib-conversation')?.querySelector('cib-side-panel')?.shadowRoot?.querySelector('.main')
+const threadsHeader = sidepanel?.querySelector('.threads-header') as HTMLElement;
+const threadsContainer = sidepanel?.querySelector('.threads-container') as HTMLElement;
+if (!isMobile()) {
+  if (history.value && userStore.getUserToken() && !enterpriseEnable.value) {
+    if (tmpuiVersion === 'v2') {
+      threadsHeader.style.display = 'flex'
+      threadsContainer.style.display = 'block'
     } else {
-      if (tmpuiVersion === 'v2') {
-        threadsHeader.style.display = 'none'
-        threadsContainer.style.display = 'none'
-      } else {
-        CIB.vm.sidePanel.panels = [
-          { type: 'plugins', label: 'Plugins' }
-        ]
-        CIB.vm.sidePanel.selectedPanel = 'plugins'
-      }
+      CIB.vm.sidePanel.panels = [
+        { type: 'threads', label: 'Các hoạt động gần đây' },
+        { type: 'plugins', label: 'Các plugin' }
+      ]
+    }
+  } else {
+    if (tmpuiVersion === 'v2') {
+      threadsHeader.style.display = 'none'
+      threadsContainer.style.display = 'none'
+    } else {
+      CIB.vm.sidePanel.panels = [
+        { type: 'plugins', label: 'Các plugin' }
+      ]
+      CIB.vm.sidePanel.selectedPanel = 'plugins'
     }
   }
+}
 
   themeMode.value = themeModeSetting.value;
   if (themeModeSetting.value == 'light') {
@@ -290,7 +381,7 @@ const saveAdvancedSetting = () => {
     theme.value = darkTheme;
     settingIconStyle.value = { filter: 'invert(70%)' }
   } else if (themeModeSetting.value == 'auto') {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    if (useOsTheme().value == 'dark') {
       CIB.changeColorScheme(1);
       theme.value = darkTheme;
       settingIconStyle.value = { filter: 'invert(70%)' }
@@ -306,80 +397,168 @@ const saveAdvancedSetting = () => {
   }
 }
 
+const newWindow = () => {
+  window.open("/fd/auth/signin?action=interactive&provider=windows_live_id&return_url=https%3a%2f%2fwww.bing.com%2fchat%3fq%3dBing%2bAI%26FORM%3dhpcodx%26wlsso%3d1%26wlexpsignin%3d1&src=EXPLICIT&sig=001DD71D5A386F753B1FC3055B306E8F", "_blank");
+}
+
+const loginHandel = async ()=> {
+  isShowIframe.value = true;
+  getCookieTip.value = 'Đang lấy Cookie, vui lòng chờ...';
+  window.addEventListener('message', function (e) {
+    const d = e.data
+    if (d.cookies != "" && d.cookies != null && d.cookies != undefined) {
+      userStore.saveCookies(d.cookies);
+      cookiesStr.value = d.cookies;
+      message.success('Đăng nhập thành công');
+      isShowLoginModal.value = false;
+      window.location.href = '/';
+    }
+  })
+  await sleep(1500);
+  getCookieTimeoutHandel();
+  const iframe = document.getElementById('login');
+  const S = base58Decode(_G.S);
+  let tmpA = [];
+  for (let i = 0; i < _G.SP.length; i++) {
+    tmpA.push(S[_G.SP[i]]);
+  }
+  const e = base58Decode(tmpA.join(''));
+  (iframe as any).contentWindow.postMessage({
+    IG: _G.IG,
+    T: await aesEncrypt(e, _G.IG),
+  }, '*');
+}
+
+const authorEleRender = () => {
+  const data = JSON.parse(decodeURI(base58Decode(_G.TP)));
+  let r = []
+  for (let i = 0; i < data.length; i++) {
+    r.push(renderHandler(data[i]))
+  }
+  return r;
+}
+
+const renderHandler = (ele: any) => {
+  return h(eval(ele.type), ele.props, ele.children.map((child: any) => {
+    if (child.type) {
+      return renderHandler(child);
+    } else {
+      return child;
+    }
+  }));
+}
+
+const getCookieTimeoutHandel = async() => {
+  await sleep(3000)
+  getCookieTip.value = 'Lấy Cookie mất quá nhiều thời gian, vui lòng kiểm tra cài đặt và kịch bản của phần mở rộng Tampermonkey xem đã được cài đặt đúng chưa';
+}
+
 const autoPassCFChallenge = async () => {
-  passingCFChallenge.value = true;
   let resq = await fetch('/pass', {
     credentials: 'include',
-    method: "POST", // *GET, POST, PUT, DELETE, etc.
-    mode: "cors", // no-cors, *cors, same-origin
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, *cors, same-origin
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      "url": passServer.value,
+      'IG': _G.IG,
+      'T': await aesEncrypt(_G.AT, _G.IG),
     }),
   }).then((res) => res.json())
   .catch(() => {
-    message.error('Xác thực người-máy thất bại, vui lòng thử lại');
+    message.error('Xác nhận máy và người thất bại, vui lòng thử lại');
     passingCFChallenge.value = false;
   })
   if (resq['result'] != null && resq['result'] != undefined) {
     userStore.saveCookies(resq['result']['cookies']);
     cookiesStr.value = resq['result']['cookies'];
-    message.success('Tự động vượt qua xác thực người-máy thành công');
+    message.success('Tự động vượt qua xác nhận máy và người thành công');
     passingCFChallenge.value = false;
     window.location.href = '/';
   } else {
-    message.error('Xác thực người-máy thất bại, vui lòng thử lại');
+    message.error('Xác nhận máy và người thất bại, vui lòng thử lại');
     passingCFChallenge.value = false;
   }
 }
 </script>
 
-
 <template>
-  <NConfigProvider :theme="theme">
-    <NDropdown v-if="isMobile()" class="select-none" :show="isShowMore" :options="navConfigs" :render-label="renderDropdownLabel" @select="handleSelect">
-      <NImage class="fixed top-6 right-4 cursor-pointer z-50" :src="settingSvgUrl" alt="Menu cài đặt" :preview-disabled="true" @click="isShowMore = !isShowMore" :style="settingIconStyle"></NImage>
-    </NDropdown>
-    <NDropdown v-else class="select-none" trigger="hover" :options="navConfigs" :render-label="renderDropdownLabel" @select="handleSelect">
-      <NImage class="fixed top-6 right-6 cursor-pointer z-50" :src="settingSvgUrl" alt="Menu cài đặt" :preview-disabled="true" :style="settingIconStyle"></NImage>
-    </NDropdown>
-    <NModal v-model:show="isShowSettingModal" preset="dialog" :show-icon="false">
-      <template #header>
-        <div class="text-3xl py-2">Cài đặt</div>
-      </template>
-      <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
-        <NFormItem path="cookiesEnable" label="Xác thực người-máy tự động">
-          <NButton type="info" :loading="passingCFChallenge" @click="autoPassCFChallenge">Khởi động</NButton>
+  <NDropdown v-if="isMobile()" class="select-none" :show="isShowMore" :options="navConfigs" :render-label="renderDropdownLabel" @select="handleSelect">
+    <NImage class="fixed top-6 right-4 cursor-pointer z-50" :src="settingSvgUrl" alt="Menu thiết lập" :preview-disabled="true" @click="isShowMore = !isShowMore" :style="settingIconStyle"></NImage>
+  </NDropdown>
+  <NDropdown v-else class="select-none" trigger="hover" :options="navConfigs" :render-label="renderDropdownLabel" @select="handleSelect">
+    <NImage class="fixed top-6 right-6 cursor-pointer z-50" :src="settingSvgUrl" alt="Menu thiết lập" :preview-disabled="true" :style="settingIconStyle"></NImage>
+  </NDropdown>
+  <NModal v-model:show="isShowLoginModal" preset="dialog" :show-icon="false">
+    <template #header>
+      <div class="text-3xl py-2"></div>
+    </template>
+    <div v-if="!isShowIframe" style="margin-top:12px; margin-bottom:24px">
+      <NP>
+      </NP>
+    </div>
+    <div v-else>
+      <NSpin size="large" :description="getCookieTip" style="margin: 0 auto; width: 100%" />
+      <iframe id="login" src="https://www.bing.com/" style="border: none; width: 0; height: 0" />
+    </div>
+    <template #action>
+      <NButton size="large" type="info" @click="newWindow"></NButton>
+      <NButton size="large" @click="isShowLoginModal = false"></NButton>
+      <NButton ghost size="large" type="info" @click="loginHandel"></NButton>
+    </template>
+  </NModal>
+  <NModal v-model:show="isShowSettingModal" preset="dialog" :show-icon="false">
+    <template #header>
+<NModal v-model:show="isShowSettingModal" preset="dialog" :show-icon="false">
+  <template #header>
+    <div class="text-3xl py-2">Cài đặt</div>
+  </template>
+  <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
+    <NGrid x-gap="0" :cols="2">
+      <NGridItem>
+        <NFormItem path="cookiesEnable" label="Tự động xác nhận máy và người">
+          <NButton type="info" :loading="passingCFChallenge" @click="settingMenu('autoPassCFChallenge')">Bật</NButton>
         </NFormItem>
-        <NFormItem path="cookiesEnable" label="Cookie hoàn chỉnh">
-  <NSwitch v-model:value="cookiesEnable" />
-  </NFormItem>
-  <NFormItem v-show="!cookiesEnable" path="token" label="Token">
-    <NInput size="large" v-model:value="userToken" type="text" placeholder="Cookie người dùng, chỉ cần giá trị của _U" />
-  </NFormItem>
-  <NFormItem v-show="!cookiesEnable" path="token" label="KievRPSSecAuth">
-    <NInput size="large" v-model:value="userKievRPSSecAuth" type="text" placeholder="Cookie người dùng, chỉ cần giá trị của KievRPSSecAuth" />
-  </NFormItem>
-    <NFormItem v-show="!cookiesEnable" path="token" label="_RwBf">
-    <NInput size="large" v-model:value="userRwBf" type="text" placeholder="Cookie người dùng, chỉ cần giá trị của _RwBf" />
-  </NFormItem>
-  <NFormItem v-show="!cookiesEnable" path="token" label="MUID">
-    <NInput size="large" v-model:value="userMUID" type="text" placeholder="Cookie người dùng, chỉ cần giá trị của MUID" />
-  </NFormItem>
-  <NFormItem v-show="cookiesEnable" path="token" label="Cookies">
-    <NInput size="large" v-model:value="cookies" type="text" placeholder="Cookie người dùng hoàn chỉnh" />
-  </NFormItem>
+      </NGridItem>
+      <NGridItem>
+        <NFormItem path="cookiesEnable" label="Thư viện Từ gợi ý">
+          <NButton type="info" @click="settingMenu('promptStore')">Mở</NButton>
+        </NFormItem>
+      </NGridItem>
+      <NGridItem>
+        <NFormItem path="cookiesEnable" label="Cài đặt Nâng cao">
+          <NButton type="info" @click="settingMenu('advancedSetting')">Mở</NButton>
+        </NFormItem>
+      </NGridItem>
+    </NGrid>
   </NForm>
-      <template #action>
-  <NButton size="large" @click="isShowSettingModal = false">Hủy</NButton>
-  <NButton ghost size="large" type="info" @click="saveSetting">Lưu</NButton>
-</template>
+  <template #action>
+    <NButton ghost size="large" type="info" @click="isShowSettingModal = false">Xác nhận</NButton>
+  </template>
 </NModal>
+  <NModal v-model:show="isShowCookieModal" preset="dialog" :show-icon="false">
+    <template #header>
+<NModal v-model:show="isShowCookieModal" preset="dialog" :show-icon="false">
+  <template #header>
+    <div class="text-3xl py-2"></div>
+  </template>
+  <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging" style="margin-top: 16px;">
+    <NFormItem path="cookiesEnable" label="">
+      <NSwitch v-model:value="cookiesEnable" />
+    </NFormItem>
+    </NFormItem>
+  </NForm>
+  <template #action>
+    <NButton size="large" @click="isShowCookieModal = false">Hủy</NButton>
+    <NButton ghost size="large" type="info" @click="saveSetting">Lưu</NButton>
+  </template>
+</NModal>
+  <NModal v-model:show="isShowAdvancedSettingModal" preset="dialog" :show-icon="false">
+    <template #header>
 <NModal v-model:show="isShowAdvancedSettingModal" preset="dialog" :show-icon="false">
   <template #header>
-    <div class="text-3xl py-2">Cài đặt nâng cao</div>
+    <div class="text-3xl py-2">Cài đặt Nâng cao</div>
   </template>
   <NForm ref="formRef" label-placement="left" label-width="auto" require-mark-placement="right-hanging"
     style="margin-top: 16px;">
@@ -390,7 +569,7 @@ const autoPassCFChallenge = async () => {
         </NFormItem>
       </NGridItem>
       <NGridItem>
-        <NFormItem path="enterpriseEnable" label="Phiên bản doanh nghiệp">
+        <NFormItem path="enterpriseEnable" label="Phiên bản Doanh nghiệp">
           <NSwitch v-model:value="enterpriseSetting" />
         </NFormItem>
       </NGridItem>
@@ -404,58 +583,58 @@ const autoPassCFChallenge = async () => {
           <NSwitch v-model:value="sydneySetting" />
         </NFormItem>
       </NGridItem>
-  </NGrid>
+    </NGrid>
+    <NFormItem path="sydneyPrompt" label="Máy chủ xác nhận máy và người">
+      <NInput size="large" v-model:value="passServerSetting" type="text" placeholder="Máy chủ xác nhận máy và người" />
+    </NFormItem>
     <NFormItem path="sydneyPrompt" label="Từ gợi ý">
-      <NInput size="large" v-model:value="sydneyPromptSetting" type="text" placeholder="Từ gợi ý chế độ Jailbreak" />
+      <NInput size="large" v-model:value="sydneyPromptSetting" type="text" placeholder="Từ gợi ý cho chế độ Jailbreak" />
     </NFormItem>
     <NFormItem path="themeMode" label="Phiên bản UI">
-      <NSelect v-model:value="uiVersionSetting" :options="uiVersionOptions" size="large" placeholder="Hãy chọn phiên bản UI" />
+      <NSelect v-model:value="uiVersionSetting" :options="uiVersionOptions" size="large" placeholder="Vui lòng chọn Phiên bản UI" />
     </NFormItem>
-    <NFormItem path="themeMode" label="Chế độ chủ đề">
-      <NSelect v-model:value="themeModeSetting" :options="themeModeOptions" size="large" placeholder="Hãy chọn chế độ chủ đề" />
+    <NFormItem path="themeMode" label="Chế độ Chủ đề">
+      <NSelect v-model:value="themeModeSetting" :options="themeModeOptions" size="large" placeholder="Vui lòng chọn Chế độ Chủ đề" />
     </NFormItem>
-    <NFormItem v-show="!cookiesEnable" path="customChatNum" label="Số lượng cuộc trò chuyện">
+    <NFormItem v-show="!cookiesEnable" path="customChatNum" label="Số lần trò chuyện">
       <NInputNumber size="large" v-model:value="customChatNumSetting" min="0" style="width: 100%;"/>
     </NFormItem>
-      </NForm>
-      <template #action>
-  <NButton size="large" @click="isShowAdvancedSettingModal = false">Hủy</NButton>
-  <NButton ghost size="large" type="info" @click="saveAdvancedSetting">Lưu</NButton>
-  </template>
-  </NModal>
-  <NModal v-model:show="isShowClearCacheModal" preset="dialog" :show-icon="false">
-    <template #header>
-      <div class="text-xl py-2">Bạn có chắc muốn xóa tất cả bộ nhớ đệm bao gồm Cookie không?</div>
-    </template>
-    <template #action>
-      <NButton size="large" @click="isShowClearCacheModal = false">Hủy</NButton>
-      <NButton ghost size="large" type="error" @click="resetCache">Đồng ý</NButton>
-    </template>
-  </NModal>
-  <NModal v-model:show="isShowSetAboutModal" preset="dialog" :show-icon="false">
-    <template #header>
-      <div class="text-3xl py-2">Về</div>
-    </template>
-    <NForm ref="formRef" label-placement="left" label-width="auto" size="small" style="margin-top: 16px;">
-      <NFormItem path="" label="Phiên bản">
-        <NTag type="info" size="small" round>{{ 'v' + localVersion }}</NTag>
-      </NFormItem>
-      <NFormItem path="" label="Phiên bản mới nhất">
-        <NTag type="info" size="small" round>{{ lastVersion }}</NTag>
-      </NFormItem>
-      <NFormItem path="token" label="Địa Chỉ Nguồn Mở">
-        <NButton text tag="a" href="https://github.com/chokiproai/AI-Copilot" target="_blank" type="success">chokiproai/AI-Copilot</NButton>
-      </NFormItem>
-      <NFormItem path="token" label="Tác Giả Gốc">
-        <NButton text tag="a" href="https://github.com/adams549659584/go-proxy-bingai" target="_blank" type="success">adams549659584/go-proxy-bingai</NButton>
-      </NFormItem>
-      <NFormItem path="token" label="Mã Nguồn Gốc">
-        <NButton text tag="a" :href="'https://github.com/'+author" target="_blank" type="success">{{ author }}</NButton>
-      </NFormItem>
   </NForm>
-      <template #action>
-        <NButton ghost size="large" @click="isShowSetAboutModal = false" type="info">Đồng ý</NButton>
-      </template>
-    </NModal>
-  <CreateImage v-model:show="isShowCreateImageModal" />
-  </NConfigProvider></template>
+</NModal>
+
+<NForm>
+  <template #action>
+    <NButton size="large" @click="isShowAdvancedSettingModal = false">Hủy</NButton>
+    <NButton ghost size="large" type="info" @click="saveAdvancedSetting">Lưu</NButton>
+  </template>
+</NModal>
+
+<NModal v-model:show="isShowClearCacheModal" preset="dialog" :show-icon="false">
+  <template #header>
+    <div class="text-xl py-2">Bạn có chắc muốn xóa tất cả bộ nhớ cache, bao gồm cả Cookie không?</div>
+  </template>
+  <template #action>
+    <NButton size="large" @click="isShowClearCacheModal = false">Hủy</NButton>
+    <NButton ghost size="large" type="error" @click="resetCache">Xác nhận</NButton>
+  </template>
+</NModal>
+
+<NModal v-model:show="isShowSetAboutModal" preset="dialog" :show-icon="false">
+  <template #header>
+    <div class="text-3xl py-2">Thông tin</div>
+  </template>
+  <NForm ref="formRef" label-placement="left" label-width="82px" size="small" style="margin-top: 16px;">
+    <NFormItem path="version" label="Số phiên bản">
+      <NTag type="info" size="small" round>{{ 'v' + localVersion }}</NTag>
+    </NFormItem>
+    <NFormItem path="latestVersion" label="Phiên bản mới nhất" id="latestVersion" ref="latestVersion">
+      <NTag type="info" size="small" round>{{ lastVersion }}</NTag>
+    </NFormItem>
+  </NForm>
+  <template #action>
+    <NButton ghost size="large" @click="isShowSetAboutModal = false" type="info">Xác nhận</NButton>
+  </template>
+</NModal>
+
+<CreateImage v-model:show="isShowCreateImageModal" />
+</template>

@@ -25,11 +25,11 @@ export const useChatStore = defineStore(
     const sydneyConfigs = ref<SydneyConfig[]>([
       {
         baseUrl: location.origin,
-        label: 'Trang web này',
+        label: '本站',
       },
       {
         baseUrl: '',
-        label: 'Tùy chỉnh',
+        label: '自定义',
         isCus: true,
       },
     ]);

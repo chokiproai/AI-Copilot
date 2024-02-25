@@ -68,8 +68,11 @@ var (
 	USER_RwBf_COOKIE_NAME           = "_RwBf"
 	RAND_COOKIE_INDEX_NAME          = "BingAI_Rand_CK"
 	RAND_IP_COOKIE_NAME             = "BingAI_Rand_IP"
+	PASS_SERVER_COOKIE_NAME         = "BingAI_Pass_Server"
 	PROXY_WEB_PREFIX_PATH           = "/web/"
 	PROXY_WEB_PAGE_PATH             = PROXY_WEB_PREFIX_PATH + "index.html"
+
+	DEBUG_PROXY_WEB, _ = url.Parse("http://localhost:4000")
 )
 
 func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
@@ -212,7 +215,7 @@ func NewSingleHostReverseProxy(target *url.URL) *httputil.ReverseProxy {
 			res.Header.Del("Set-Cookie")
 			for _, v := range resCookies {
 				if v != "" {
-					res.Header.Add("Set-Cookie", strings.Split(v, "; ")[0]+"; Path=/")
+					res.Header.Add("Set-Cookie", strings.Split(v, "; ")[0]+"; path=/")
 				}
 			}
 		}

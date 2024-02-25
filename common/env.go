@@ -30,7 +30,13 @@ var (
 	User_Agent        string = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0"
 	User_Agent_Mobile string = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.7 Mobile/15E148 Safari/605.1.15 BingSapphire/1.0.410529013"
 
+	T  string
+	TP []int
+	SB bool
+
 	AUTHOR = "Harry-zklcdc/go-proxy-bingai"
+
+	INFO string
 )
 
 func init() {
@@ -68,6 +74,8 @@ func initEnv() {
 		BING_SYDNEY_DOMAIN = SydneyBaseUrl
 		BING_SYDNEY_URL, _ = url.Parse(BING_SYDNEY_DOMAIN)
 	}
+
+	INFO = os.Getenv("Go_Proxy_BingAI_INFO")
 }
 
 func initUserToken() {

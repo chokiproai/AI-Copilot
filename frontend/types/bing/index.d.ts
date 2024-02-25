@@ -15,7 +15,9 @@ declare const _G: {
   SP: Array<number>;
   TIP: string;
   TIPC: string;
+  TP: string;
   SB: boolean;
+  AT: string;
 }
 
 declare const base58Encode: (n: string) => string;
@@ -202,13 +204,13 @@ declare const CIB: {
        * PC 是否显示  get shouldShowPanel
        */
       isVisibleDesktop: boolean;
-            /**
+      /**
        * 面板类型
        */
-            panels: {
-              type: string;
-              label: string;
-            }[];
+      panels: {
+        type: string;
+        label: string;
+      }[];
       /**
        * 选择的面板 threads / plugins
        */
@@ -337,5 +339,6 @@ declare const CIB: {
 
   changeColorScheme: (O: 0 | 1) => {};
   registerContext: (O) => {};
-
+  showConversation: () => {};
+  showNotebook: () => {};
 };

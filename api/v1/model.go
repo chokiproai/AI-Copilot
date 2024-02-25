@@ -1,9 +1,12 @@
 package v1
 
 import (
+	"adams549659584/go-proxy-bingai/common"
 	"encoding/json"
 	"net/http"
 	"strings"
+
+	binglib "github.com/Harry-zklcdc/bing-lib"
 )
 
 func ModelHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +28,7 @@ func ModelHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if modelId != "dall-e-3" && !isInArray(chatMODELS, modelId) {
+	if !common.IsInArray([]string{DALL_E_3, GPT_35_TURBO, GPT_4_TURBO_PREVIEW, GPT_35_TURBO_16K, GPT_4_32K}, modelId) && !common.IsInArray(binglib.ChatModels[:], modelId) {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Not Found"))
 		return

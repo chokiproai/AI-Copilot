@@ -16,8 +16,11 @@ import (
 var (
 	globalChat *binglib.Chat
 
-	chatMODELS = []string{binglib.BALANCED, binglib.BALANCED_OFFLINE, binglib.CREATIVE, binglib.CREATIVE_OFFLINE, binglib.PRECISE, binglib.PRECISE_OFFLINE,
-		binglib.BALANCED_G4T, binglib.BALANCED_G4T_OFFLINE, binglib.CREATIVE_G4T, binglib.CREATIVE_G4T_OFFLINE, binglib.PRECISE_G4T, binglib.PRECISE_G4T_OFFLINE}
+	GPT_35_TURBO        = "gpt-3.5-turbo"
+	GPT_4_TURBO_PREVIEW = "gpt-4-turbo-preview"
+
+	GPT_35_TURBO_16K = "gpt-3.5-turbo-16k"
+	GPT_4_32K        = "gpt-4-32k"
 
 	STOPFLAG = "stop"
 )
@@ -50,7 +53,7 @@ func ChatHandler(w http.ResponseWriter, r *http.Request) {
 	chat.SetXFF(common.GetRandomIP())
 
 	cookie := r.Header.Get("Cookie")
-	if cookie == "" {
+	if cookie == "" || !strings.Contains(cookie, "_U=") {
 		if len(common.USER_TOKEN_LIST) > 0 {
 			seed := time.Now().UnixNano()
 			rng := rand.New(rand.NewSource(seed))
@@ -72,10 +75,53 @@ func ChatHandler(w http.ResponseWriter, r *http.Request) {
 	var resq chatRequest
 	json.Unmarshal(resqB, &resq)
 
-	if !isInArray(chatMODELS, resq.Model) {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Model Not Found"))
-		return
+	if !common.IsInArray(binglib.ChatModels[:], resq.Model) {
+		if !common.IsInArray([]string{GPT_35_TURBO, GPT_4_TURBO_PREVIEW, GPT_35_TURBO_16K, GPT_4_32K}, resq.Model) {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Model Not Found"))
+			return
+		}
+
+		if resq.Temperature <= 0 || resq.Temperature > 2 {
+			resq.Temperature = 1
+		}
+		if resq.Model == GPT_35_TURBO {
+			if resq.Temperature <= 0.75 {
+				resq.Model = binglib.PRECISE
+			} else if resq.Temperature > 0.75 && resq.Temperature < 1.25 {
+				resq.Model = binglib.BALANCED
+			} else if resq.Temperature >= 1.25 {
+				resq.Model = binglib.CREATIVE
+			}
+		}
+		if resq.Model == GPT_4_TURBO_PREVIEW {
+			if resq.Temperature <= 0.75 {
+				resq.Model = binglib.PRECISE_G4T
+			} else if resq.Temperature > 0.75 && resq.Temperature < 1.25 {
+				resq.Model = binglib.BALANCED_G4T
+			} else if resq.Temperature >= 1.25 {
+				resq.Model = binglib.CREATIVE_G4T
+			}
+		}
+
+		if resq.Model == GPT_35_TURBO_16K {
+			if resq.Temperature <= 0.75 {
+				resq.Model = binglib.PRECISE_18K
+			} else if resq.Temperature > 0.75 && resq.Temperature < 1.25 {
+				resq.Model = binglib.BALANCED_18K
+			} else if resq.Temperature >= 1.25 {
+				resq.Model = binglib.CREATIVE_18K
+			}
+		}
+		if resq.Model == GPT_4_32K {
+			if resq.Temperature <= 0.75 {
+				resq.Model = binglib.PRECISE_G4T_18K
+			} else if resq.Temperature > 0.75 && resq.Temperature < 1.25 {
+				resq.Model = binglib.BALANCED_G4T_18K
+			} else if resq.Temperature >= 1.25 {
+				resq.Model = binglib.CREATIVE_G4T_18K
+			}
+		}
 	}
 
 	err = chat.NewConversation()
@@ -147,12 +193,12 @@ func ChatHandler(w http.ResponseWriter, r *http.Request) {
 			flusher.Flush()
 
 			if (tmp == "User needs to solve CAPTCHA to continue." || tmp == "Request is throttled." || tmp == "Unknown error.") && common.BypassServer != "" && r.Header.Get("Cookie") == "" {
-				go func(cookie string) {
-					t, _ := getCookie(cookie, chat.GetChatHub().GetConversationId(), hex.NewUUID())
+				go func() {
+					t, _ := getCookie("", "", "")
 					if t != "" {
 						globalChat.SetCookies(t)
 					}
-				}(globalChat.GetCookies())
+				}()
 			}
 		}
 		w.Write([]byte("data: [DONE]\n"))
@@ -184,25 +230,16 @@ func ChatHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(resData)
 
 		if (text == "User needs to solve CAPTCHA to continue." || text == "Request is throttled." || text == "Unknown error.") && common.BypassServer != "" && r.Header.Get("Cookie") == "" {
-			go func(cookie string) {
-				t, _ := getCookie(cookie, chat.GetChatHub().GetConversationId(), hex.NewUUID())
+			go func() {
+				t, _ := getCookie("", "", "")
 				if t != "" {
 					globalChat.SetCookies(t)
 				}
-			}(globalChat.GetCookies())
+			}()
 		}
 	}
 
 	if cookie != chat.GetCookies() && !strings.Contains(chat.GetCookies(), common.USER_TOKEN_COOKIE_NAME) {
 		globalChat.SetCookies(chat.GetCookies())
 	}
-}
-
-func isInArray(arr []string, str string) bool {
-	for _, v := range arr {
-		if v == str {
-			return true
-		}
-	}
-	return false
 }
