@@ -8,7 +8,7 @@ defineProps<{
   source: IPrompt;
 }>();
 
-const messgae = useMessage();
+const message = useMessage();
 const promptStore = usePromptStore();
 const { promptList, optPromptConfig } = storeToRefs(promptStore);
 
