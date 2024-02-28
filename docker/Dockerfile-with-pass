@@ -9,7 +9,7 @@ USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl
 
-RUN curl -L https://github.com/Harry-zklcdc/go-proxy-bingai/releases/latest/download/go-proxy-bingai-linux-amd64.tar.gz -o go-proxy-bingai-linux-amd64.tar.gz && \
+RUN curl -L https://github.com/chokiproai/AI-Copilot/releases/latest/download/go-proxy-bingai-linux-amd64.tar.gz -o go-proxy-bingai-linux-amd64.tar.gz && \
     tar -zxvf go-proxy-bingai-linux-amd64.tar.gz && \
     chmod +x go-proxy-bingai
 
