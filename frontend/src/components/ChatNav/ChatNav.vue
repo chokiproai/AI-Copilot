@@ -643,9 +643,9 @@ const autoPassCFChallenge = async () => {
         <NFormItem path="latestVersion" label="Phiên bản mới nhất" id="latestVersion" ref="latestVersion">
           <NTag type="info" size="small" round>{{ lastVersion }}</NTag>
         </NFormItem>
-      <NFormItem path="originAuthor" label="Địa Chỉ Nguồn Mở">
-        <NButton text tag="a" href="https://github.com/chokiproai/AI-Copilot" target="_blank" type="success">chokiproai/AI-Copilot</NButton>
-      </NFormItem>
+        <template>
+            <a href="https://github.com/chokiproai/AI-Copilot" target="_blank">AI-Copilot by Chokiproai</a>
+        </template>
       </NForm>
       <template #action>
         <NButton ghost size="large" @click="isShowSetAboutModal = false" type="info">Đồng ý</NButton>
