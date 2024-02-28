@@ -25,7 +25,7 @@ export const usePromptStore = defineStore(
     const promptDownloadConfig = ref<Array<IPromptDownloadConfig>>([
       {
         type: 1,
-        name: 'ChatGPT Prompt vn',
+        name: 'ChatGPT Prompt VN ',
         url: './data/prompts/Vi.json',
         refer: 'https://github.com/chokiproai/prompt/blob/main/vi.json',
       },
@@ -51,7 +51,7 @@ export const usePromptStore = defineStore(
     const optPromptConfig = ref<{
       isShow: boolean;
       type?: 'add' | 'edit';
-      title?: 'Thêm từ gợi ý' | 'Chỉnh sửa từ gợi ý';
+      title?: 'Thêm lời nhắc' | 'Chỉnh sửa';
       tmpPrompt?: IPrompt;
       newPrompt: IPrompt;
     }>({
@@ -91,7 +91,7 @@ export const usePromptStore = defineStore(
       } else {
         return {
           result: false,
-          msg: 'Định dạng từ gợi ý không chính xác',
+          msg: 'Định dạng từ nhắc nhở là sai',
         };
       }
     }

@@ -20,7 +20,7 @@ const delPrompt = (item: IPrompt) => {
 const showEditPromptPop = (item: IPrompt) => {
   optPromptConfig.value.isShow = true;
   optPromptConfig.value.type = 'edit';
-  optPromptConfig.value.title = 'Chỉnh sửa từ gợi ý';
+  optPromptConfig.value.title = 'Chỉnh sửa';
   optPromptConfig.value.tmpPrompt = item;
   optPromptConfig.value.newPrompt = { ...item };
 };

@@ -78,7 +78,7 @@ export const useUserStore = defineStore(
             threadsContainer.style.display = 'none'
           } else {
             CIB.vm.sidePanel.panels = [
-              { type: 'plugins', label: 'Plugin' }
+              { type: 'plugins', label: 'Plugins' }
             ]
             CIB.vm.sidePanel.selectedPanel = 'plugins'
           }

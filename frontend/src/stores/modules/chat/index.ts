@@ -25,12 +25,7 @@ export const useChatStore = defineStore(
     const sydneyConfigs = ref<SydneyConfig[]>([
       {
         baseUrl: location.origin,
-        label: '本站',
-      },
-      {
-        baseUrl: '',
-        label: '自定义',
-        isCus: true,
+        label: 'Trang web này',
       },
     ]);
     const sydneyCheckTimeoutMS = 3000;
@@ -39,7 +34,7 @@ export const useChatStore = defineStore(
       if (!config.baseUrl) {
         return {
           isUsable: false,
-          errorMsg: '链接不可为空',
+          errorMsg: 'Liên kết không thể trống',
         };
       }
       try {
@@ -55,9 +50,9 @@ export const useChatStore = defineStore(
           };
           ws.onerror = () => {
             clearTimeout(wsTimer);
-            reject(new Error(`聊天服务器 ${config.baseUrl} 连接失败`));
+            reject(new Error(`máy chủ trò chuyện ${config.baseUrl} Kết nối thất bại`));
           };
-          ws.onclose = () => reject(new Error(`聊天服务器 ${config.baseUrl} 连接超时`));
+          ws.onclose = () => reject(new Error(`máy chủ trò chuyện ${config.baseUrl} Kết nối quá hạn`));
         });
         return {
           isUsable: true,

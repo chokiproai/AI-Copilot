@@ -210,21 +210,21 @@ const hackStyle = async() => {
   }
   const serpEle = document.querySelector('cib-serp');
   const conversationEle = serpEle?.shadowRoot?.querySelector('cib-conversation') as HTMLElement;
-// todo Phản hồi tạm thời không thể sử dụng, tạm thời loại bỏ
-const welcomeEle = conversationEle?.shadowRoot?.querySelector('cib-welcome-container');
-const loginTip = welcomeEle?.shadowRoot?.querySelectorAll("div[class='muid-upsell']");
-if (loginTip?.length) {
-  loginTip.forEach((ele) => {
-    ele.remove();
-  });
-}
-welcomeEle?.shadowRoot?.querySelector('.preview-container')?.remove();
-welcomeEle?.shadowRoot?.querySelector('.footer')?.remove();
-serpEle?.shadowRoot?.querySelector('cib-serp-feedback')?.remove();
-if (isMobile()) {
-  welcomeEle?.shadowRoot?.querySelector('.container-item')?.remove();
-  CIB.vm.actionBar.input.placeholder = 'Có vấn đề gì thì hỏi tôi... ("/" kích hoạt từ gợi ý)';
-}
+  // todo 反馈暂时无法使用，先移除
+  const welcomeEle = conversationEle?.shadowRoot?.querySelector('cib-welcome-container');
+  const loginTip = welcomeEle?.shadowRoot?.querySelectorAll("div[class='muid-upsell']");
+  if (loginTip?.length) {
+    loginTip.forEach((ele) => {
+      ele.remove();
+    });
+  }
+  welcomeEle?.shadowRoot?.querySelector('.preview-container')?.remove();
+  welcomeEle?.shadowRoot?.querySelector('.footer')?.remove();
+  serpEle?.shadowRoot?.querySelector('cib-serp-feedback')?.remove();
+  if (isMobile()) {
+    welcomeEle?.shadowRoot?.querySelector('.container-item')?.remove();
+    CIB.vm.actionBar.input.placeholder = 'Nếu bạn có bất kỳ câu hỏi nào, chỉ cần hỏi tôi... ("/" kích hoạt từ gợi ý) ';
+  }
   // 加入css
   const conversationStyleEle = document.createElement('style');
   conversationStyleEle.innerText = conversationCssText;
@@ -279,7 +279,7 @@ const hackSydney = () => {
       "messageType": "Context",
       "messageId": "discover-web--page-ping-mriduna-----",
     }])
-    CIB.config.strings.webPageContextPrefix = 'Đã ở chế độ thủ tục, hãy sử dụng cẩn thận để tránh bị cấm';
+    CIB.config.strings.webPageContextPrefix = 'Đã ở chế độ jailbreak, vui lòng sử dụng thận trọng để tránh bị cấm tài khoản'
   }
 }
 
@@ -333,7 +333,7 @@ const handleInputTextChanged = (ev: Event) => {
 };
 
 const handleInputFocus = (ev: FocusEvent) => {
-  // console.log('获取焦点:', ev);
+  // console.log('Lấy nét:', ev);
 };
 const handleInputBlur = (ev: FocusEvent) => {
   // 简单解决失焦与点击冲突
@@ -403,18 +403,18 @@ const handlePromptListScroll = () => {
 
 const auth = async () => {
   if (!authKey.value) {
-    message.error('Vui lòng nhập mã xác thực trước');
+    message.error('Vui lòng nhập mã ủy quyền trước');
     return;
   }
   isAuthBtnLoading.value = true;
   userStore.setAuthKey(authKey.value);
   const res = await userStore.getSysConfig();
   if (res.data.isAuth) {
-    message.success('Xác thực thành công');
+    message.success('Ủy quyền thành công');
     isShowUnauthorizedModal.value = false;
     afterAuth(res.data);
   } else {
-    message.error('Mã xác thực không đúng');
+    message.error('Mã ủy quyền sai');
   }
   isAuthBtnLoading.value = false;
 };
@@ -442,24 +442,24 @@ const auth = async () => {
         :keeps="10"
         @scroll="handlePromptListScroll"
       />
-<NEmpty v-else class="bg-white w-full max-w-[1060px] max-h-[390px] rounded-xl py-6" description="Hiện chưa có dữ liệu từ gợi ý">
-  <template #extra>
-    <NButton secondary type="info" @click="isShowPromptSotre = true">Đi đến thư viện từ gợi ý để thêm</NButton>
-  </template>
-</NEmpty>
-</div>
-</main>
-<footer>
-  <!-- Lựa chọn dịch vụ chat -->
-  <ChatServiceSelect />
-  <!-- Xác thực -->
-  <div v-if="isShowUnauthorizedModal" class="fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-black/40 z-50">
-    <NResult class="box-border w-11/12 lg:w-[400px] px-4 py-4 bg-white rounded-md" status="403" title="401 Chưa được cấp quyền">
-      <template #footer>
-        <NInput class="w-11/12" v-model:value="authKey" type="password" placeholder="Nhập mã xác thực" maxlength="60" clearable></NInput>
-        <NButton class="mt-4" secondary type="info" :loading="isAuthBtnLoading" @click="auth">Xác thực</NButton>
-      </template>
-    </NResult>
-  </div>
-</footer>
+      <NEmpty v-else class="bg-white w-full max-w-[1060px] max-h-[390px] rounded-xl py-6" description="Dữ liệu từ nhắc nhở chưa được thiết lập">
+        <template #extra>
+          <NButton secondary type="info" @click="isShowPromptSotre = true">Đi đến từ điển nhắc để thêm</NButton>
+        </template>
+      </NEmpty>
+    </div>
+  </main>
+  <footer>
+    <!-- 服务器选择 -->
+    <ChatServiceSelect />
+    <!-- 授权 -->
+    <div v-if="isShowUnauthorizedModal" class="fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-black/40 z-50">
+      <NResult class="box-border w-11/12 lg:w-[400px] px-4 py-4 bg-white rounded-md" status="403" title="401 trái phép">
+        <template #footer>
+          <NInput class="w-11/12" v-model:value="authKey" type="password" placeholder="Vui lòng nhập mã ủy quyền" maxlength="60" clearable></NInput>
+          <n-button class="mt-4" secondary type="info" :loading="isAuthBtnLoading" @click="auth">Ủy quyền</n-button>
+        </template>
+      </NResult>
+    </div>
+  </footer>
 </template>
