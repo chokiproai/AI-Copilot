@@ -522,12 +522,10 @@ const autoPassCFChallenge = async () => {
             <NButton type="info" :loading="passingCFChallenge" @click="settingMenu('autoPassCFChallenge')">Khởi động</NButton>
           </NFormItem>
         </NGridItem>
-        </NGridItem>
         <NGridItem>
           <NFormItem path="cookiesEnable" label="Lựa chọn dịch vụ">
             <NButton type="info" @click="settingMenu('chatService')">Mở</NButton>
           </NFormItem>
-        </NGridItem>
         </NGridItem>
         <NGridItem>
           <NFormItem path="cookiesEnable" label="Kho từ gợi ý">
@@ -643,9 +641,10 @@ const autoPassCFChallenge = async () => {
         <NFormItem path="latestVersion" label="Phiên bản mới nhất" id="latestVersion" ref="latestVersion">
           <NTag type="info" size="small" round>{{ lastVersion }}</NTag>
         </NFormItem>
-        <template>
-            <a href="https://github.com/chokiproai/AI-Copilot" target="_blank">AI-Copilot by Chokiproai</a>
-        </template>
+        <!-- Nếu bạn muốn thêm một liên kết trong form, hãy sử dụng NFormItem để bao bọc -->
+        <NFormItem label="Mã nguồn">
+          <a href="https://github.com/chokiproai/AI-Copilot" target="_blank">AI-Copilot by Chokiproai</a>
+        </NFormItem>
       </NForm>
       <template #action>
         <NButton ghost size="large" @click="isShowSetAboutModal = false" type="info">Đồng ý</NButton>
