@@ -2,7 +2,6 @@ package v1
 
 import (
 	"adams549659584/go-proxy-bingai/common"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -17,7 +16,7 @@ func init() {
 	go func() {
 		time.Sleep(200 * time.Millisecond)
 		t, _ := getCookie("", "", "")
-		log.Println("BingAPI Ready!")
+		common.Logger.Info("BingAPI Ready!")
 		globalChat = binglib.NewChat(t).SetBingBaseUrl("http://localhost:" + common.PORT).SetSydneyBaseUrl("ws://localhost:" + common.PORT).SetBypassServer(common.BypassServer)
 		globalImage = binglib.NewImage(t).SetBingBaseUrl("http://localhost:" + common.PORT).SetBypassServer(common.BypassServer)
 	}()
@@ -25,6 +24,9 @@ func init() {
 
 func getCookie(reqCookie, convId, rid string) (cookie string, err error) {
 	cookie = reqCookie
+	if common.AUTH_KEY != "" {
+		cookie += "; " + common.AUTH_KEY_COOKIE_NAME + "=" + common.AUTH_KEY
+	}
 	c := request.NewRequest()
 	res := c.SetUrl("http://localhost:"+common.PORT+"/search?q=Bing+AI&showconv=1&FORM=hpcodx&ajaxhist=0&ajaxserp=0&cc=us").
 		SetHeader("User-Agent", common.User_Agent).
@@ -45,7 +47,12 @@ func getCookie(reqCookie, convId, rid string) (cookie string, err error) {
 	}
 	resp, status, err := binglib.Bypass(common.BypassServer, reqCookie, "local-gen-"+hex.NewUUID(), IG, convId, rid, T)
 	if err != nil || status != http.StatusOK {
+		common.Logger.Error("Bypass Error: %v", err)
 		return
 	}
-	return resp.Result.Cookies + "; _U=" + hex.NewHex(128), nil
+	cookie = resp.Result.Cookies + "; _U=" + hex.NewHex(128)
+	if common.AUTH_KEY != "" {
+		cookie += "; " + common.AUTH_KEY_COOKIE_NAME + "=" + common.AUTH_KEY
+	}
+	return cookie, nil
 }
