@@ -37,9 +37,9 @@
 
 >⭐[Image Creator](https://onedrive.live.com/embed?resid=750758803F9E18F7%21170&authkey=!AA6KYWKRIIZ2_Ug)
 
-### Cách nhận BING_COOKIE (Nếu muốn dùng cho Image Creator + Plugins)
+### Cách nhận BING COOKIE (Nếu muốn dùng cho Image Creator + Plugins)
 
-> Định cấu hình BING_COOKIE có nghĩa là bạn chia sẻ tài khoản của mình với tất cả những người sử dụng dịch vụ này, chức năng vẽ không cần đăng nhập thì nên đặt biến này. Mở www.bing.com và đăng nhập, sau đó Copy theo hình dưới đây:
+> Định cấu hình BING COOKIE có nghĩa là bạn chia sẻ tài khoản của mình với tất cả những người sử dụng dịch vụ này, chức năng vẽ không cần đăng nhập thì nên đặt biến này. Mở www.bing.com và đăng nhập, sau đó Copy theo hình dưới đây:
 #### _U Cookie
 
 ![Go_Proxy_BingAI_USER_TOKEN_1](./docs/_U-Cookie.png)
