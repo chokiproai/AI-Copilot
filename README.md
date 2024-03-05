@@ -27,9 +27,9 @@
 
 ## Link 
 
->⭐ [Chat AI](https://ngoctuanai-copilot.hf.space)
+>⭐ [Chat AI]()
 
->⭐ [Image Creator](https://ngoctuanai-copilot.hf.space/create)
+>⭐ [Image Creator]()
 
 ## Video
 
@@ -42,10 +42,10 @@
 > Định cấu hình BING_COOKIE có nghĩa là bạn chia sẻ tài khoản của mình với tất cả những người sử dụng dịch vụ này, chức năng vẽ không cần đăng nhập thì nên đặt biến này. Mở www.bing.com và đăng nhập, sau đó Copy theo hình dưới đây:
 #### _U Cookie
 
-![Go_Proxy_BingAI_USER_TOKEN_1](./docs/_U Cookie.png)
+![Go_Proxy_BingAI_USER_TOKEN_1](./docs/_U-Cookie.png)
 #### _RwBf Cookie
 
-![USER_RwBf](./docs/_RwBf Cookie)
+![USER_RwBf](./docs/_RwBf-Cookie.png)
 ## Tất cả
 
 - [x] Soạn
